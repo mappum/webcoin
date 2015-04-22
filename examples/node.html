@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <title>Webcoin</title>
+  <script src="../webcoin.min.js"></script>
+  <script>
+    var network = Webcoin.bitcore.Networks.livenet;
+
+    var peers = new Webcoin.PeerGroup({ verbose: true });
+    var store = new Webcoin.BlockStore({ path: network.name+'.chain' });
+    var chain = new Webcoin.Blockchain({ peerGroup: peers, store: store, network: network });
+
+    peers.on('peerconnect', function(peer) {
+      console.log('Connected to peer:', peer.remoteAddress, peer.subversion);
+
+      peer.on('disconnect', function() {
+        console.log('Disconnected from peer:', peer.remoteAddress, peer.subversion);
+      });
+    });
+    peers.connect();
+
+    chain.on('sync', function(tip) {
+      console.log('Sync progress:', tip.height, new Date(tip.header.time * 1000));
+    });
+    chain.sync();
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
