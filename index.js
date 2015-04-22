@@ -4,5 +4,7 @@ module.exports = {
   BlockStore: require('./lib/blockStore.js'),
   Blockchain: require('./lib/blockchain.js'),
   constants: require('./lib/constants.js'),
-  utils: require('./lib/utils.js')
+  utils: require('./lib/utils.js'),
+
+  bitcore: require('bitcore')
 };

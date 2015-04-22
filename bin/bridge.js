@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var WebPeer = require('../lib/webPeer.js');
 var PeerGroup = require('../lib/peerGroup.js');
 var BlockStore = require('../lib/blockStore.js');
 var Blockchain = require('../lib/blockchain.js');
@@ -10,17 +9,14 @@ var dataPath = './data';
 var network = Networks.livenet;
 
 var peers = new PeerGroup({ acceptWeb: true, verbose: true });
-var store = new BlockStore({ path: dataPath+'/'+network.name });
+var store = new BlockStore({ path: dataPath+'/'+network.name+'.chain' });
 var chain = new Blockchain({ peerGroup: peers, store: store, network: network });
 
 peers.on('peerconnect', function(peer) {
-  var uri = peer.host+':'+peer.port;
-  if(peer instanceof WebPeer) uri = '(WebRTC)';
-
-  console.log('Connected to peer:', uri, peer.subversion);
+  console.log('Connected to peer:', peer.remoteAddress, peer.subversion);
 
   peer.on('disconnect', function() {
-    console.log('Disconnected from peer:', uri, peer.subversion);
+    console.log('Disconnected from peer:', peer.remoteAddress, peer.subversion);
   });
 });
 peers.connect();
