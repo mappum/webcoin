@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-var p2p = require('bitcore-p2p');
-var Networks = require('bitcore').Networks;
-var messages = new p2p.Messages;
 var WebPeer = require('../lib/webPeer.js');
+var PeerGroup = require('../lib/peerGroup.js');
 
 /*var downloadPeer = null;
 
@@ -22,17 +20,15 @@ function startDownload(peer) {
   peer.sendMessage(message);
 }*/
 
-var PeerGroup = require('../lib/peerGroup.js');
 var pg = new PeerGroup({ acceptWeb: true, verbose: true });
 pg.on('peerconnect', function(peer) {
-  peer.on('ready', function() {
-    var uri = peer.host+':'+peer.port;
-    if(peer instanceof WebPeer) uri = '(WebRTC)';
-    console.log('Connected to peer:', uri, peer.subversion);
-  });
+  var uri = peer.host+':'+peer.port;
+  if(peer instanceof WebPeer) uri = '(WebRTC)';
+
+  console.log('Connected to peer:', uri, peer.subversion);
 
   peer.on('disconnect', function() {
-    console.log('Disconnected from peer:', peer.host);
+    console.log('Disconnected from peer:', uri, peer.subversion);
   });
 })
 pg.connect();

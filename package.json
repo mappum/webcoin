@@ -4,7 +4,11 @@
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -r ./index.js -s Webcoin > webcoin.js && cat webcoin.js | uglifyjs -m > webcoin.min.js"
+  },
+  "bin": {
+    "webcoin-bridge": "./bin/bridge.js"
   },
   "keywords": [
     "bitcoin",
@@ -19,5 +23,9 @@
     "bitcoin": "^2.3.0",
     "bitcore": "^0.11.7",
     "peerhub": "0.0.2"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.8",
+    "uglify-js": "^2.4.20"
   }
 }
