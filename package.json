@@ -20,12 +20,22 @@
   "author": "Matt Bell <mappum@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "async": "^0.9.0",
     "bitcoin": "^2.3.0",
     "bitcore": "^0.11.7",
+    "browserify-buffertools": "^1.0.2",
+    "buffertools": "^2.1.2",
+    "level-js": "^2.1.6",
+    "leveldown": "^0.10.4",
+    "levelup": "^0.19.0",
+    "mkdirp": "^0.5.0",
     "peerhub": "0.0.2"
   },
   "devDependencies": {
     "browserify": "^9.0.8",
     "uglify-js": "^2.4.20"
+  },
+  "browser": {
+    "buffertools": "browserify-buffertools"
   }
 }

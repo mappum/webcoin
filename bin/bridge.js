@@ -2,26 +2,18 @@
 
 var WebPeer = require('../lib/webPeer.js');
 var PeerGroup = require('../lib/peerGroup.js');
+var BlockStore = require('../lib/blockStore.js');
+var Blockchain = require('../lib/blockchain.js');
+var Networks = require('bitcore').Networks;
 
-/*var downloadPeer = null;
+var dataPath = './data';
+var network = Networks.livenet;
 
-function startDownload(peer) {
-  downloadPeer = peer;
+var peers = new PeerGroup({ acceptWeb: true, verbose: true });
+var store = new BlockStore({ path: dataPath+'/'+network.name });
+var chain = new Blockchain({ peerGroup: peers, store: store, network: network });
 
-  peer.on('headers', function(res) {
-    console.dir(res.headers[0])
-  })
-
-  var message = new messages.GetHeaders({
-    starts: [ '00000000dfd5d65c9d8561b4b8f60a63018fe3933ecb131fb37f905f87da951a' ]
-  });
-
-  console.log(message)
-  peer.sendMessage(message);
-}*/
-
-var pg = new PeerGroup({ acceptWeb: true, verbose: true });
-pg.on('peerconnect', function(peer) {
+peers.on('peerconnect', function(peer) {
   var uri = peer.host+':'+peer.port;
   if(peer instanceof WebPeer) uri = '(WebRTC)';
 
@@ -30,5 +22,10 @@ pg.on('peerconnect', function(peer) {
   peer.on('disconnect', function() {
     console.log('Disconnected from peer:', uri, peer.subversion);
   });
-})
-pg.connect();
+});
+peers.connect();
+
+chain.on('sync', function(tip) {
+  console.log('Sync progress:', tip.height, new Date(tip.header.time * 1000));
+});
+chain.sync();
