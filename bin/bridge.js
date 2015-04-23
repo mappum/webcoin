@@ -22,6 +22,12 @@ peers.on('peerconnect', function(peer) {
 peers.connect();
 
 chain.on('sync', function(tip) {
-  console.log('Sync progress:', tip.height, new Date(tip.header.time * 1000));
+  var max = chain.downloadPeer.startHeight;
+  console.log('Sync progress:', tip.height + ' / ' + max,
+    '(' + (Math.round(tip.height / max * 1000) / 10) + '%)',
+    '-', new Date(tip.header.time * 1000));
+});
+chain.on('synced', function(tip) {
+  console.log('Done syncing');
 });
 chain.sync();
