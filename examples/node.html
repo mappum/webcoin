@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Webcoin</title>
-  <script src="../webcoin.min.js"></script>
+  <script src="../webcoin.js"></script>
   <script>
     var network = Webcoin.bitcore.Networks.livenet;
 
@@ -25,10 +25,14 @@
         '(' + (Math.round(tip.height / max * 1000) / 10) + '%)',
         '-', new Date(tip.header.time * 1000));
     });
+    chain.on('block', function(block) {
+      document.getElementById('height').innerHTML = block.height;
+      document.getElementById('hash').innerHTML = block.header.hash;
+    });
     chain.sync();
   </script>
 </head>
 <body>
-  
+  <strong>Current block:</strong> <span id="height"></span> - <span id="hash"></span>
 </body>
 </html>
