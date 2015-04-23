@@ -1,9 +1,16 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Webcoin = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (process){
+(function (process,Buffer){
 var levelup = require('levelup');
 var mkdirp = require('mkdirp');
 var bitcore = require('bitcore');
+var buffertools = require('buffertools');
 var u = require('./utils.js');
+
+function formatHash(hash) {
+  if(Buffer.isBuffer(hash)) return buffertools.reverse(hash).toString('hex');
+  if(typeof hash === 'string') return hash;
+  throw new Error('Invalid hash format');
+}
 
 var BlockStore = module.exports = function(opts) {
   opts = opts || {};
@@ -15,33 +22,54 @@ var BlockStore = module.exports = function(opts) {
   this.db = levelup(opts.path, opts);
 };
 
-BlockStore.prototype.putHeader = function(header, opts, cb) {
+BlockStore.prototype.put = function(block, opts, cb) {
   if(typeof opts === 'function') {
     cb = opts;
     opts = {};
   }
+  if(block.height == null) return cb(new Error('Must specify height'));
+  if(opts.tip) opts.best = true;
 
   var self = this;
-  this.db.put(u.formatHash(header.hash), JSON.stringify(header.toJSON()), function(err) {
-    if(err) return cb(err);
-    if(opts.tip) {
-      if(opts.height == null) return cb(new Error('Must specify height when putting tip header'));
-      self._setTip({ height: opts.height, hash: header.hash }, cb);
-    }
-    else cb(null);
+  var blockJson = JSON.stringify({
+    height: block.height,
+    header: block.header.toJSON()
   });
+  var batch = [
+    { type: 'put', key: formatHash(block.header.hash), value: blockJson }
+  ];
+  if(opts.best && opts.prev) {
+    var prevJson = JSON.stringify({
+      height: opts.prev.height,
+      header: opts.prev.header.toJSON(),
+      next: block.header.hash
+    });
+    batch.push({ type: 'put', key: formatHash(opts.prev.hash), value: prevJson });
+  }
+  this.db.batch(batch, function(err) {
+      if(err) return cb(err);
+      if(opts.tip) {
+        return self._setTip({ height: block.height, hash: block.header.hash }, cb);
+      }
+      cb(null);
+    });
 };
 
-BlockStore.prototype.getHeader = function(hash, cb) {
-  this.db.get(u.formatHash(hash), function(err, header) {
+BlockStore.prototype.get = function(hash, cb) {
+  this.db.get(formatHash(hash), function(err, block) {
     if(err) return cb(err);
-    header = JSON.parse(header);
-    cb(null, bitcore.BlockHeader.fromJSON(header));
+    try { block = JSON.parse(block); }
+    catch(err) { return cb(new Error('Error parsing header:' + err)); }
+    block.header = bitcore.BlockHeader.fromJSON(block.header);
+    cb(null, block);
   });
 };
 
 BlockStore.prototype._setTip = function(tip, cb) {
-  this.db.put('tip', JSON.stringify(tip), cb);
+  var newTip = {};
+  for(var k in tip) newTip[k] = tip[k];
+  delete newTip.header;
+  this.db.put('tip', JSON.stringify(newTip), cb);
 };
 
 BlockStore.prototype.getTip = function(cb) {
@@ -51,21 +79,21 @@ BlockStore.prototype.getTip = function(cb) {
     try { tip = JSON.parse(tip); }
     catch(err) { return cb('Invalid tip value: '+err); }
 
-    self.getHeader(tip.hash, function(err, header) {
+    self.get(formatHash(tip.hash), function(err, block) {
       if(err) return cb(err);
       tip.hash = u.toHash(tip.hash);
-      tip.header = header;
+      tip.header = block.header;
       cb(null, tip);
     });
   });
 };
 
-}).call(this,require('_process'))
-},{"./utils.js":6,"_process":276,"bitcore":52,"level-js":299,"leveldown":315,"levelup":321,"mkdirp":345}],2:[function(require,module,exports){
+}).call(this,require('_process'),require("buffer").Buffer)
+},{"./utils.js":6,"_process":276,"bitcore":52,"buffer":131,"buffertools":127,"level-js":299,"leveldown":315,"levelup":321,"mkdirp":345}],2:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var async = require('async');
-var Networks = require('bitcore').Networks;
+var bitcore = require('bitcore');
 var genesis = require('./constants.js').genesisHeaders;
 var BlockStore = require('./blockStore.js');
 var u = require('./utils.js');
@@ -74,7 +102,7 @@ var Blockchain = module.exports = function(opts) {
   opts = opts || {};
   if(!opts.peerGroup) throw new Error('"peerGroup" option is required for Blockchain');
   this.peerGroup = opts.peerGroup;
-  this.network = Networks.get(opts.network) || Networks.defaultNetwork;
+  this.network = bitcore.Networks.get(opts.network) || bitcore.Networks.defaultNetwork;
   this.store = opts.store || new BlockStore({ path: opts.path });
 
   var genesisHeader = genesis[this.network.name];
@@ -93,15 +121,27 @@ var Blockchain = module.exports = function(opts) {
 util.inherits(Blockchain, EventEmitter);
 
 Blockchain.prototype.sync = function(opts, cb) {
+  var self = this;
   if(this.syncing) return cb(null);
   if(typeof opts === 'function') {
     cb = opts;
     opts = {};
   }
   if(cb) this.once('synced', cb);
+
   this.syncing = true;
 
-  var self = this;
+  var syncDone = function() {
+    if(self.downloadPeer.startHeight && self.tip.height >= self.downloadPeer.startHeight) {
+      self.removeListener('block', syncDone);
+      self.removeListener('syncing', syncDone);
+      self.syncing = false;
+      self.emit('synced', self.tip);
+    }
+  };
+  this.on('block', syncDone);
+  this.on('syncing', syncDone);
+
   var startDownload = function(err) {
     if(err) {
       err = new Error('Error initializing blockchain: '+err);
@@ -120,10 +160,10 @@ Blockchain.prototype._initialize = function(cb) {
 
   var self = this;
   this.store.getTip(function(err, tip) {
+    self.initialized = true;
     if(err && err.name === 'NotFoundError') return cb(null);
     if(err) return cb(err);
     self.tip = tip;
-    self.initialized = true;
     cb(null, tip);
   });
 };
@@ -152,6 +192,7 @@ Blockchain.prototype._setDownloadPeer = function(peer) {
   this.downloadPeer = peer;
   peer.on('headers', this._onHeaders);
   peer.on('disconnect', this._onDownloadPeerDisconnect);
+  this.emit('syncing', peer);
 };
 
 Blockchain.prototype._getHeaders = function(opts) {
@@ -170,10 +211,11 @@ Blockchain.prototype._getHeaders = function(opts) {
 Blockchain.prototype._onHeaders = function(message) {
   var self = this;
   if(!message.headers) return console.error('No headers in "headers" message from download peer');
-  this._processHeaders(message.headers, function(err) {
-    if(err) return console.error('Peer sent invalid headers:', err);
+  if(message.headers.length === 0) return;
+  this._processHeaders(message.headers, function(err, last) {
+    if(err) return console.error('Peer sent invalid headers:', err, last);
     self.emit('sync', self.tip);
-    self._getHeaders();
+    if(self.syncing) self._getHeaders();
   });
 };
 
@@ -182,44 +224,96 @@ Blockchain.prototype._onDownloadPeerDisconnect = function() {
   self.downloadPeer = null;
 };
 
-Blockchain.prototype._getLocator = function(tip, cb) {
+Blockchain.prototype._getLocator = function(from, cb) {
   // TODO: support specifying locator by timestamp and by height
   // TODO: include some previous blocks in case our tip is on a fork
-  return cb(null, [ tip ]);
+  return cb(null, [ from ]);
+};
+
+Blockchain.prototype._get = function(hash, cb) {
+  if(hash.compare(this.tip.hash) === 0) return cb(null, this.tip);
+
+  this.store.get(hash, function(err, block) {
+    if(err) return cb(err);
+    cb(null, block);
+  });
 };
 
 Blockchain.prototype._processHeaders = function(headers, cb) {
   var self = this;
-  var tasks = headers.map(function(header) {
-    return function(cb) {
-      self._processHeader(header, cb);
-    };
+
+  var fromTip = headers[0].prevHash.compare(self.tip.hash) === 0;
+  var previousHeight = this.tip.height;
+
+  this._get(headers[0].prevHash, function(err, start) {
+    if(err && err.name === 'NotFoundError') return cb(new Error('Block does not connect to chain')); 
+    if(err) return cb(err);
+    async.reduce(headers, start, self._processHeader.bind(self), function(err, last) {
+      var reorg = !fromTip && last.height > previousHeight;
+      var done = function(err) {
+        if(err) return cb(err, last);
+        if(reorg) self.emit('reorg', last);
+        cb(null, last);
+      };
+
+      if(reorg) {
+        var reorgSize = start.height - previousHeight;
+        var toChange = headers.slice(0, reorgSize + 1);
+        var height = start.height + reorgSize + 1;
+        async.reduceRight(toChange, headers[reorgSize + 1], function(next, header, cb) {
+          var next = { height: height+1, header: next };
+          var current = { height: height, header: header };
+          height--;
+          self.store.put(next, { best: true, prev: current }, function(err) {
+            if(err) return cb(err);
+            cb(null, current);
+          });
+        }, done);
+        return;
+      }
+      done(err, last);
+    });
   });
-  async.series(tasks, cb);
 };
 
-Blockchain.prototype._processHeader = function(header, cb) {
-  var self = this;
-  var height = this.tip.height + 1;
-
-  if(header.prevHash.compare(this.tip.hash) !== 0) {
-    return cb(new Error('Block does not connect'));
+Blockchain.prototype._processHeader = function(prev, header, cb) {
+  if(prev instanceof bitcore.BlockHeader) {
+    header = prev;
+    prev = this.tip;
   }
-  if(!this._difficultyChange(height) && header.bits !== this.tip.header.bits) {
-    return cb(new Error('Unexpected difficulty change'));
+
+  var self = this;
+  var height = prev.height + 1;
+  var output = {
+    height: height,
+    hash: u.toHash(header.hash),
+    header: header
+  };
+
+  if(header.prevHash.compare(prev.hash) !== 0) {
+    return cb(new Error('Block does not connect to previous'), output);
+  }
+  if(!self._difficultyChange(height) && header.bits !== prev.header.bits) {
+    return cb(new Error('Unexpected difficulty change'), output);
   }
   if(!header.validProofOfWork()) {
-    return cb(new Error('Invalid proof of work'));
+    return cb(new Error('Invalid proof of work'), output);
   }
   // TODO: other checks (timestamp, version)
 
-  this.store.putHeader(header, { tip: true, height: height }, function(err) {
+  var tip = height > self.tip.height;
+  self.store.put({ header: header, height: height }, { tip: tip, prev: prev }, function(err) {
     if(err) return cb(err);
 
-    self.tip.height = height;
-    self.tip.hash = u.toHash(header.hash);
-    self.tip.header = header;
-    cb(null);
+    if(tip) {
+      self.tip.height = height;
+      self.tip.hash = output.hash;
+      self.tip.header = header;
+      output.syncing = self.syncing;      
+      self.emit('block', output);
+    }
+
+    cb(null, output);
   });
 };
 
@@ -274,12 +368,12 @@ var Peer = module.exports = function(opts) {
   }
 
   var self = this;
+  this.on('connect', function(message) {
+    self.connectTime = Date.now();
+  });
   this.on('version', function(message) {
     self.startHeight = message.startHeight;
     self.services = message.services;
-  });
-  this.on('ready', function(message) {
-    self.connectTime = Date.now();
   });
 
   this.remoteAddress = 'tcp://' + this.host + ':' + this.port;
@@ -477,11 +571,6 @@ var buffertools = require('buffertools');
 module.exports = {
   toHash: function(hex) {
     return buffertools.reverse(new Buffer(hex, 'hex'));
-  },
-  formatHash: function(hash) {
-    if(hash instanceof Buffer) return hash;
-    if(typeof hash === 'string') return new Buffer(hash, 'hex');
-    throw new Error('Invalid hash format');
   }
 };
 
@@ -59685,7 +59774,7 @@ function extend(target) {
 },{}],362:[function(require,module,exports){
 module.exports={
   "name": "webcoin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
