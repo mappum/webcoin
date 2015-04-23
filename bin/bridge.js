@@ -64,7 +64,7 @@ function sendHeaders(peer, message) {
     });
   }, function(err) {
     if(err !== true) return console.error(err);
-    if(!start) return;
+    if(!start || !start.next) return;
     store.get(start.next, next);
   });
 }
