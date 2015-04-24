@@ -11,9 +11,11 @@ var u = require('../lib/utils.js');
 var dataPath = './data';
 var network = Networks.livenet;
 
-var peers = new PeerGroup({ acceptWeb: true, verbose: true });
+var peers = new PeerGroup({ acceptWeb: true, verbose: true, getTip: getTip });
 var store = new BlockStore({ path: dataPath+'/'+network.name+'.chain' });
 var chain = new Blockchain({ peerGroup: peers, store: store, network: network });
+
+function getTip() { return chain.tip; }
 
 peers.on('peerconnect', function(peer) {
   console.log('Connected to peer:', peer.remoteAddress, peer.subversion);
