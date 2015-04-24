@@ -4,7 +4,7 @@
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tape test/*.js",
     "build": "browserify -r ./index.js -s Webcoin > webcoin.js && cat webcoin.js | uglifyjs -c -m > webcoin.min.js"
   },
   "bin": {
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "browserify": "^9.0.8",
+    "tape": "^4.0.0",
     "uglify-js": "^2.4.20"
   },
   "browser": {
