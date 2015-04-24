@@ -18,6 +18,19 @@ function createBlock() {
   return { height: Math.floor(Math.random() * 400000), header: header };
 }
 
+test('open blockstore', function(t) {
+  var bs1 = new BlockStore({ path: 'data/test.store' });
+  bs1.on('error', t.error);
+
+  // opening on a path that is alrady locked
+  var bs2 = new BlockStore({ path: 'data/test.store' });
+  bs2.on('error', function(err) {
+    t.ok(err);
+  });
+
+  bs1.close(t.end);
+});
+
 test('blockstore put', function(t) {
   t.plan(7);
 
