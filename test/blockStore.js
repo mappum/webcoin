@@ -18,83 +18,107 @@ function createBlock() {
   return { height: Math.floor(Math.random() * 400000), header: header };
 }
 
+var storePath = 'data/' + process.pid + '.store';
+
 test('open blockstore', function(t) {
-  var bs1 = new BlockStore({ path: 'data/test.store' });
+  var bs1 = new BlockStore({ path: storePath });
   bs1.on('error', t.error);
 
-  // opening on a path that is alrady locked
-  var bs2 = new BlockStore({ path: 'data/test.store' });
-  bs2.on('error', function(err) {
-    t.ok(err);
+  t.test('opening on a path that is already locked', function(t) {
+    var bs2 = new BlockStore({ path: storePath });
+    bs2.on('error', function(err) {
+      t.ok(err);
+      t.end();
+    });
   });
 
-  bs1.close(t.end);
+  t.test('closing', function(t) {
+    bs1.close(t.end);
+  });
+
+  t.end();
 });
 
 test('blockstore put', function(t) {
-  t.plan(7);
-
-  var bs = new BlockStore({ path: 'data/test.store' });
+  var bs = new BlockStore({ path: storePath });
   var block = createBlock();
-  // simple put
-  bs.put(block, t.error);
-  // put existing block
-  bs.put(block, t.error);
-  // put invalid blocks
-  bs.put({}, t.ok);
-  bs.put({ height: 123 }, t.ok);
-  bs.put({ header: block.header }, t.ok);
-
-  bs.close(function(err) {
-    t.error(err);
-    // put after close
-    bs.put(block, t.ok);
+  
+  t.test('simple put', function(t) {
+    bs.put(block, t.end);
+  });
+  t.test('put existing block', function(t) {
+    bs.put(block, t.end);
+  });
+  t.test('put invalid blocks', function(t) {
+    t.plan(3);
+    bs.put({}, t.ok);
+    bs.put({ height: 123 }, t.ok);
+    bs.put({ header: block.header }, t.ok);
+  });
+  t.test('put after close', function(t) {
+    t.plan(2);
+    bs.close(function(err) {
+      t.error(err);
+      bs.put(block, t.ok);
+    });
   });
 });
 
 test('blockstore get', function(t) {
-  t.plan(14);
+  t.plan(6);
 
-  var bs = new BlockStore({ path: './test.store' });
+  var bs = new BlockStore({ path: storePath });
   var block1 = createBlock();
   bs.put(block1, function(err) {
-    if(err) t.fail(err);
+    t.error(err);
 
-    // get using `header.hash`
-    bs.get(block1.header.hash, function(err, block2) {
-      t.error(err);
-      // compare blocks
-      t.equal(block1.height, block2.height);
-      // NOTE: we have to access `header.hash` before comparing headers,
-      // for the hash to actually be computed and cached
-      t.equal(block1.header.hash, block2.header.hash);
-      t.deepEqual(block1.header, block2.header);
+    t.test('get using `header.hash`', function(t) {
+      bs.get(block1.header.hash, function(err, block2) {
+        t.error(err);
+        // compare blocks
+        t.equal(block1.height, block2.height);
+        // NOTE: we have to access `header.hash` before comparing headers,
+        // for the hash to actually be computed and cached
+        t.equal(block1.header.hash, block2.header.hash);
+        t.deepEqual(block1.header, block2.header);
+        t.end();
+      });
     });
 
-    // get using buffer hash
-    bs.get(block1.header._getHash(), function(err, block2) {
-      t.error(err);
-      // compare blocks
-      t.equal(block1.height, block2.height);
-      // NOTE: we have to access `header.hash` before comparing headers,
-      // for the hash to actually be computed and cached
-      t.equal(block1.header.hash, block2.header.hash);
-      t.deepEqual(block1.header, block2.header);
+    t.test('get using buffer hash', function(t) {
+      bs.get(block1.header._getHash(), function(err, block2) {
+        t.error(err);
+        // compare blocks
+        t.equal(block1.height, block2.height);
+        // NOTE: we have to access `header.hash` before comparing headers,
+        // for the hash to actually be computed and cached
+        t.equal(block1.header.hash, block2.header.hash);
+        t.deepEqual(block1.header, block2.header);
+        t.end();
+      });
     });
 
-    // get an invalid hash
-    bs.get('1234', function(err, block2) {
-      t.ok(err);
-      t.equal(err.message, 'Invalid hash format');
-      t.notOk(block2);
+    t.test('get an invalid hash', function(t) {
+      bs.get('1234', function(err, block2) {
+        t.ok(err);
+        t.equal(err.message, 'Invalid hash format');
+        t.notOk(block2);
+        t.end();
+      });
     });
 
-    // get a valid, nonexistent hash
-    var block3 = createBlock();
-    bs.get(block3.header.hash, function(err, block2) {
-      t.ok(err);
-      t.equal(err.name, 'NotFoundError');
-      t.notOk(block2);
+    t.test('get a valid, nonexistent hash', function(t) {
+      var block3 = createBlock();
+      bs.get(block3.header.hash, function(err, block2) {
+        t.ok(err);
+        t.equal(err.name, 'NotFoundError');
+        t.notOk(block2);
+        t.end();
+      });
+    });
+
+    t.test('closing', function(t) {
+      bs.close(t.end);
     });
   });
 });
