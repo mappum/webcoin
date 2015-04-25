@@ -44,8 +44,6 @@ test('creating blockchain instances', function(t) {
 });
 
 test('blockchain sync', { timeout: 30 * 1000 }, function(t) {
-  t.plan(7);
-
   var peers = new PeerGroup;
   peers.connect();
 
