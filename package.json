@@ -36,6 +36,7 @@
   "devDependencies": {
     "browserify": "^9.0.8",
     "faucet": "0.0.1",
+    "standard": "^3.7.1",
     "tape": "^4.0.0",
     "uglify-js": "^2.4.20"
   },
