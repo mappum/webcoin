@@ -11,13 +11,14 @@ var node = new Node({
 node.on('error', function (err) {
   console.error(err)
 })
-node.peers
-  .on('peerconnect', function (peer) {
-    console.log('Connected to peer:', peer.remoteAddress, peer.subversion)
-  })
-  .on('peerdisconnect', function (peer) {
+
+node.peers.on('peer', function (peer) {
+  console.log('Connected to peer:', peer.remoteAddress, peer.subversion)
+  peer.on('disconnect', function () {
     console.log('Disconnected from peer:', peer.remoteAddress, peer.subversion)
   })
+})
+
 node.chain
   .on('sync', function (tip) {
     var max = node.chain.syncHeight
