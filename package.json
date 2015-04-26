@@ -4,7 +4,7 @@
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/tape test/*.js | ./node_modules/.bin/faucet",
+    "test": "./node_modules/.bin/tape test/*.js",
     "build": "./node_modules/.bin/browserify -r ./index.js -s Webcoin > webcoin.js && cat webcoin.js | uglifyjs -c -m > webcoin.min.js"
   },
   "bin": {
@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "browserify": "^9.0.8",
-    "faucet": "0.0.1",
     "standard": "^3.7.1",
     "tape": "^4.0.0",
     "uglify-js": "^2.4.20"
