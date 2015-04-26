@@ -21,15 +21,15 @@ function createBlock () {
 var storePath = 'data/' + process.pid + '.store'
 
 test('open blockstore', function (t) {
-  var bs1 = new BlockStore({ path: storePath })
+  var bs1 = new BlockStore({ path: storePath }, t.error)
   bs1.on('error', t.error)
 
   t.test('opening on a path that is already locked', function (t) {
-    var bs2 = new BlockStore({ path: storePath })
-    bs2.on('error', function (err) {
+    var bs2 = new BlockStore({ path: storePath }, function (err) {
       t.ok(err)
       t.end()
     })
+    bs2.on('error', t.error)
   })
 
   t.test('closing', function (t) {
