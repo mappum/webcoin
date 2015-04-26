@@ -5,7 +5,11 @@ var Node = require('../lib/node.js')
 
 var node = new Node({
   network: Networks.livenet,
-  path: './data'
+  path: 'data',
+  acceptWeb: true
+})
+node.on('error', function (err) {
+  console.error(err)
 })
 node.peers
   .on('peerconnect', function (peer) {
@@ -16,7 +20,8 @@ node.peers
   })
 node.chain
   .on('sync', function (tip) {
-    var max = node.chain.syncHeight || node.chain.downloadPeer.bestHeight
+    var max = node.chain.syncHeight
+    if (!max && node.chain.downloadPeer) node.chain.downloadPeer.bestHeight
     console.log('Sync progress:', tip.height + ' / ' + max,
       '(' + (Math.round(tip.height / max * 1000) / 10) + '%)',
       '-', new Date(tip.header.time * 1000))
