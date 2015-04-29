@@ -2,6 +2,7 @@
 
 var Networks = require('bitcore').Networks
 var Node = require('../lib/node.js')
+var Wallet = require('../lib/wallet.js')
 
 var node = new Node({
   network: Networks.livenet,
@@ -28,6 +29,16 @@ node.chain
       '-', new Date(tip.header.time * 1000))
   })
   .on('synced', function (tip) {
-    console.log('Done syncing. Now at height: ' + tip.height + ', hash: ' + tip.header.hash)
+    console.log('Chain up-to-date. height: ' + tip.height
+      + ', hash: ' + tip.header.hash)
+  })
+  .on('block', function (block) {
+    if (node.chain.syncing) return
+    console.log('Received a new block. height: ' + block.height
+      + ', hash: ' + block.header.hash)
   })
 node.start()
+
+
+var w = new Wallet({ path: 'data', id: 'main' })
+w.listenToChain(node.chain)
