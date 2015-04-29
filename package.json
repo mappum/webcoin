@@ -4,8 +4,9 @@
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/tape test/*.js",
-    "build": "./node_modules/.bin/browserify -r ./index.js -s Webcoin > webcoin.js && cat webcoin.js | uglifyjs -c -m > webcoin.min.js"
+    "test": "npm run standard && ./node_modules/.bin/tape test/*.js",
+    "build": "./node_modules/.bin/browserify -r ./index.js -s Webcoin > webcoin.js && cat webcoin.js | uglifyjs -c -m > webcoin.min.js",
+    "standard": "./node_modules/.bin/standard lib/*.js"
   },
   "bin": {
     "webcoin-bridge": "./bin/bridge.js"
