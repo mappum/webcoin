@@ -192,7 +192,7 @@ test('blockchain paths', function (t) {
   })
 })
 
-test('blockchain sync', { timeout: 30 * 1000 }, function (t) {
+test('blockchain sync', function (t) {
   var peers = new PeerGroup()
   peers.connect()
 
