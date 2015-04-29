@@ -193,6 +193,8 @@ test('blockchain paths', function (t) {
 })
 
 test('blockchain sync', function (t) {
+  t.plan(8)
+
   var peers = new PeerGroup()
   peers.connect()
 
