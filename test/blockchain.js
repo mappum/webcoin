@@ -1,36 +1,57 @@
 var test = require('tape')
+var bitcore = require('bitcore')
+var BN = bitcore.crypto.BN
 var PeerGroup = require('../lib/peerGroup.js')
 var BlockStore = require('../lib/blockStore.js')
 var Blockchain = require('../lib/blockchain.js')
+var u = require('../lib/utils.js')
+var constants = require('../lib/constants.js')
+
+try {
+  var leveldown = require('leveldown')
+} catch(err) {}
+
+
+function deleteStore (store, cb) {
+  if (leveldown) {
+    return leveldown.destroy(store.store.location, cb)
+  }
+  cb(null)
+}
+
+function endStore (store, t) {
+  store.close(function (err) {
+    t.error(err)
+    deleteStore(store, t.end)
+  })
+}
+
+function createBlock (prev, nonce) {
+  var i = nonce || 0, header
+  do {
+    header = new bitcore.BlockHeader({
+      version: 1,
+      prevHash: u.toHash(prev.hash),
+      merkleRoot: constants.zeroHash,
+      time: prev.time + 1,
+      bits: prev.bits,
+      nonce: i++
+    })
+  } while (!header.validProofOfWork)
+  return header
+}
 
 var storePath = 'data/' + process.pid + '.store'
 
 test('creating blockchain instances', function (t) {
-  t.plan(3)
-
-  t.test('create blockchain without required options', function (t) {
-    var chain, store
-    t.throws(function () {
-      chain = new Blockchain()
-    })
-    t.throws(function () {
-      var peers = new PeerGroup()
-      chain = new Blockchain({ peerGroup: peers })
-    })
-    t.throws(function () {
-      store = new BlockStore({ path: storePath })
-      chain = new Blockchain({ store: store })
-    })
-    chain || 0 // HACK to prevent JSHint warnings about not using `chain`
-    store.close(t.end)
-  })
+  t.plan(2)
 
   t.test('create blockchain with instantiated BlockStore', function (t) {
     t.doesNotThrow(function () {
       var peers = new PeerGroup()
       var store = new BlockStore({ path: storePath })
       var chain = new Blockchain({ peerGroup: peers, store: store })
-      chain.store.close(t.end)
+      endStore(chain.store, t)
     })
   })
 
@@ -41,8 +62,133 @@ test('creating blockchain instances', function (t) {
         peerGroup: peers,
         path: storePath
       })
-      chain.store.close(t.end)
+      endStore(chain.store, t)
     })
+  })
+})
+
+test('blockchain paths', function (t) {
+  var maxTarget = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'hex')
+  var genesis = new bitcore.BlockHeader({
+    version: 1,
+    prevHash: constants.zeroHash,
+    merkleRoot: constants.zeroHash,
+    time: Math.floor(Date.now() / 1000),
+    bits: u.toCompactTarget(maxTarget),
+    nonce: 0
+  })
+  var chain = new Blockchain({
+    path: storePath,
+    maxTarget: maxTarget,
+    genesis: genesis
+  })
+
+  var headers = []
+  t.test('headers add to blockchain', function (t) {
+    var block = genesis
+    for (var i = 0; i < 10; i++) {
+      block = createBlock(block)
+      headers.push(block)
+    }
+    chain.processHeaders(headers, t.end)
+  })
+
+  t.test('simple path with no fork', function (t) {
+    var from = { height: 2, header: headers[1] },
+      to = { height: 10, header: headers[9] }
+    chain.getPath(from, to, function (err, path) {
+      if (err) return t.end(err)
+      t.ok(path)
+      t.ok(path.add)
+      t.ok(path.remove)
+      t.notOk(path.fork)
+      t.equal(path.add.length, 8)
+      t.equal(path.add[0].height, 3)
+      t.equal(path.add[0].header.hash, headers[2].hash)
+      t.equal(path.add[7].height, 10)
+      t.equal(path.add[7].header.hash, to.header.hash)
+      t.equal(path.remove.length, 0)
+      t.end()
+    })
+  })
+
+  t.test('backwards path with no fork', function (t) {
+    var from = { height: 10, header: headers[9] },
+      to = { height: 2, header: headers[1] }
+    chain.getPath(from, to, function (err, path) {
+      if (err) return t.end(err)
+      t.ok(path)
+      t.ok(path.add)
+      t.ok(path.remove)
+      t.notOk(path.fork)
+      t.equal(path.remove.length, 8)
+      t.equal(path.remove[0].height, 10)
+      t.equal(path.remove[0].header.hash, from.header.hash)
+      t.equal(path.remove[7].height, 3)
+      t.equal(path.remove[7].header.hash, headers[2].hash)
+      t.equal(path.add.length, 0)
+      t.end()
+    })
+  })
+
+  var headers2 = []
+  t.test('fork headers add to blockchain', function (t) {
+    var block = headers[4]
+    for (var i = 0; i < 10; i++) {
+      block = createBlock(block, 0xffffff)
+      headers2.push(block)
+    }
+    chain.processHeaders(headers2, t.end)
+  })
+
+  t.test('path with fork', function (t) {
+    var from = { height: 10, header: headers[9] },
+      to = { height: 15, header: headers2[9] }
+    chain.getPath(from, to, function (err, path) {
+      if (err) return t.end(err)
+      t.ok(path)
+      t.ok(path.add)
+      t.ok(path.remove)
+      t.equal(path.fork.header.hash, headers[4].hash)
+      t.equal(path.remove.length, 5)
+      t.equal(path.remove[0].height, 10)
+      t.equal(path.remove[0].header.hash, from.header.hash)
+      t.equal(path.remove[4].height, 6)
+      t.equal(path.remove[4].header.hash, headers[5].hash)
+      t.equal(path.add.length, 10)
+      t.equal(path.add[0].height, 6)
+      t.equal(path.add[0].header.hash, headers2[0].hash)
+      t.equal(path.add[9].height, 15)
+      t.equal(path.add[9].header.hash, headers2[9].hash)
+      t.end()
+    })
+  })
+
+  t.test('backwards path with fork', function (t) {
+    var from = { height: 15, header: headers2[9] },
+      to = { height: 10, header: headers[9] }
+    chain.getPath(from, to, function (err, path) {
+      if (err) return t.end(err)
+      t.ok(path)
+      t.ok(path.add)
+      t.ok(path.remove)
+      t.equal(path.fork.header.hash, headers[4].hash)
+      t.equal(path.remove.length, 10)
+      t.equal(path.remove[0].height, 15)
+      t.equal(path.remove[0].header.hash, from.header.hash)
+      t.equal(path.remove[9].height, 6)
+      t.equal(path.remove[9].header.hash, headers2[0].hash)
+      t.equal(path.add.length, 5)
+      t.equal(path.add[0].height, 6)
+      t.equal(path.add[0].header.hash, headers[5].hash)
+      t.equal(path.add[4].height, 10)
+      t.equal(path.add[4].header.hash, headers[9].hash)
+      t.end()
+    })
+  })
+
+  t.test('deleting blockstore', function (t) {
+    endStore(chain.store, t)
   })
 })
 
@@ -53,12 +199,12 @@ test('blockchain sync', { timeout: 30 * 1000 }, function (t) {
   var store = new BlockStore({
     path: storePath,
     reset: function (err) {
-      t.error(err)
+      t.error(err, 'opened BlockStore')
 
       var chain = new Blockchain({ peerGroup: peers, store: store })
 
       chain.on('syncing', function (peer) {
-        t.ok(peer)
+        t.ok(peer, 'downloading from peer')
       })
       chain.on('synced', function (tip) {
         t.ok(tip)
@@ -70,7 +216,7 @@ test('blockchain sync', { timeout: 30 * 1000 }, function (t) {
         t.equal(block.header.hash, '000000004a81b9aa469b11649996ecb0a452c16d1181e72f9f980850a1c5ecce')
 
         peers.disconnect()
-        store.close(t.end)
+        endStore(store, t)
       })
     }
   })
