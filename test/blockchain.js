@@ -11,7 +11,6 @@ try {
   var leveldown = require('leveldown')
 } catch(err) {}
 
-
 function deleteStore (store, cb) {
   if (leveldown) {
     return leveldown.destroy(store.store.location, cb)
@@ -58,10 +57,7 @@ test('creating blockchain instances', function (t) {
   t.test('create blockchain with path instead of BlockStore', function (t) {
     t.doesNotThrow(function () {
       var peers = new PeerGroup()
-      var chain = new Blockchain({
-        peerGroup: peers,
-        path: storePath
-      })
+      var chain = new Blockchain({ peerGroup: peers, path: storePath })
       endStore(chain.store, t)
     })
   })
