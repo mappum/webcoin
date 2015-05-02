@@ -1,6 +1,6 @@
 {
   "name": "webcoin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Bitcoin client in the browser",
   "main": "index.js",
   "scripts": {
