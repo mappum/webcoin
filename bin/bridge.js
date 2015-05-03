@@ -5,7 +5,7 @@ var Node = require('../lib/node.js')
 var Wallet = require('../lib/wallet.js')
 
 var node = new Node({
-  network: Networks.livenet,
+  network: Networks.testnet,
   path: 'data',
   acceptWeb: true
 })
@@ -39,6 +39,7 @@ node.chain
   })
 node.start()
 
-
-var w = new Wallet({ path: 'data', id: 'main' })
-w.listenToChain(node.chain)
+var w = new Wallet({ path: 'data', id: 'main', node: node }, function (err) {
+  if (err) return console.error(err)
+  console.log(w.getAddress())
+})
