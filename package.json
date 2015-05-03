@@ -1,7 +1,7 @@
 {
   "name": "webcoin",
   "version": "0.1.0",
-  "description": "Bitcoin client in the browser",
+  "description": "Bitcoin client for Node.js and the browser",
   "main": "index.js",
   "scripts": {
     "test": "npm run standard && ./node_modules/.bin/tape test/*.js",
