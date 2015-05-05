@@ -25,15 +25,16 @@ function endStore (store, t) {
   })
 }
 
-function createBlock (prev, nonce) {
+var maxTarget = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'hex')
+function createBlock (prev, nonce, bits) {
   var i = nonce || 0, header
   do {
     header = new bitcore.BlockHeader({
       version: 1,
-      prevHash: u.toHash(prev.hash),
+      prevHash: prev ? u.toHash(prev.hash) : constants.zeroHash,
       merkleRoot: constants.zeroHash,
-      time: prev.time + 1,
-      bits: prev.bits,
+      time: prev ? (prev.time + 1) : Math.floor(Date.now() / 1000),
+      bits: bits || (prev ? prev.bits : u.toCompactTarget(maxTarget)),
       nonce: i++
     })
   } while (!header.validProofOfWork)
@@ -64,7 +65,6 @@ test('creating blockchain instances', function (t) {
 })
 
 test('blockchain paths', function (t) {
-  var maxTarget = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'hex')
   var genesis = new bitcore.BlockHeader({
     version: 1,
     prevHash: constants.zeroHash,
@@ -184,6 +184,80 @@ test('blockchain paths', function (t) {
   })
 
   t.test('deleting blockstore', function (t) {
+    endStore(chain.store, t)
+  })
+})
+
+test('blockchain verification', function (t) {
+  var genesis = new bitcore.BlockHeader({
+    version: 1,
+    prevHash: constants.zeroHash,
+    merkleRoot: constants.zeroHash,
+    time: Math.floor(Date.now() / 1000),
+    bits: u.toCompactTarget(maxTarget),
+    nonce: 0
+  })
+  var chain = new Blockchain({
+    path: storePath,
+    maxTarget: maxTarget,
+    genesis: genesis,
+    interval: 10
+  })
+
+  var headers = []
+  t.test('headers add to blockchain', function (t) {
+    var block = genesis
+    for (var i = 0; i < 9; i++) {
+      block = createBlock(block)
+      headers.push(block)
+    }
+    chain.processHeaders(headers, t.end)
+  })
+
+  t.test('error on header that doesn\'t connect', function (t) {
+    var block = createBlock()
+    chain.processHeaders([ block ], function (err) {
+      t.ok(err)
+      t.equal(err.message, 'Block does not connect to chain')
+      t.end()
+    })
+  })
+
+  t.test('error on header with unexpected difficulty change', function (t) {
+    var block = createBlock(headers[5])
+    block.bits = 0x1d00ffff
+    chain.processHeaders([ block ], function (err) {
+      t.ok(err)
+      t.equal(err.message, 'Unexpected difficulty change')
+      t.end()
+    })
+  })
+
+  t.test('error on header with invalid proof of work', function (t) {
+    var block = createBlock(headers[8])
+    block.bits = 0x00000001
+    chain.processHeaders([ block ], function (err) {
+      t.ok(err)
+      t.equal(err.message, 'Invalid proof of work')
+      t.end()
+    })
+  })
+
+  t.test('error on header with invalid difficulty change', function (t) {
+    var block = createBlock(headers[8], 0, 0x2200ffff)
+    chain.processHeaders([ block ], function (err) {
+      t.ok(err)
+      t.equal(err.message, 'Bits in block (2200ffff) is different than expected (213fffc0)')
+      t.end()
+    })
+  })
+
+  t.test('accept valid difficulty change', function (t) {
+    var block = createBlock(headers[8], 0, 0x213fffc0)
+    chain.processHeaders([ block ], t.end)
+  })
+
+  t.test('teardown', function (t) {
     endStore(chain.store, t)
   })
 })
