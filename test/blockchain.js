@@ -266,6 +266,7 @@ test('blockchain sync', function (t) {
   t.plan(8)
 
   var peers = new PeerGroup()
+  peers.on('error', function (err) { console.error(err) })
   peers.connect()
 
   var store = new BlockStore({
