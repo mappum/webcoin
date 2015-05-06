@@ -223,6 +223,17 @@ test('blockchain verification', function (t) {
     })
   })
 
+  t.test('error on nonconsecutive headers', function (t) {
+    var block1 = createBlock(headers[5], 10000)
+    var block2 = createBlock(headers[6], 10000)
+
+    chain.processHeaders([ block1, block2 ], function (err) {
+      t.ok(err)
+      t.equal(err.message, 'Block does not connect to previous')
+      t.end()
+    })
+  })
+
   t.test('error on header with unexpected difficulty change', function (t) {
     var block = createBlock(headers[5])
     block.bits = 0x1d00ffff
@@ -255,6 +266,128 @@ test('blockchain verification', function (t) {
   t.test('accept valid difficulty change', function (t) {
     var block = createBlock(headers[8], 0, 0x213fffc0)
     chain.processHeaders([ block ], t.end)
+  })
+
+  t.test('teardown', function (t) {
+    endStore(chain.store, t)
+  })
+})
+
+test('blockchain queries', function (t) {
+  var genesis = new bitcore.BlockHeader({
+    version: 1,
+    prevHash: constants.zeroHash,
+    merkleRoot: constants.zeroHash,
+    time: Math.floor(Date.now() / 1000),
+    bits: u.toCompactTarget(maxTarget),
+    nonce: 0
+  })
+  var chain = new Blockchain({
+    path: storePath,
+    maxTarget: maxTarget,
+    genesis: genesis
+  })
+
+  var headers = []
+  t.test('setup', function (t) {
+    var block = genesis
+    for (var i = 0; i < 100; i++) {
+      block = createBlock(block)
+      headers.push(block)
+    }
+    chain.processHeaders(headers, t.end)
+  })
+
+  t.test('get block at height', function (t) {
+    t.plan(14)
+
+    chain.getBlockAtHeight(10, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 10)
+      t.equal(block.header.hash, headers[9].hash)
+    })
+
+    chain.getBlockAtHeight(90, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 90)
+      t.equal(block.header.hash, headers[89].hash)
+    })
+
+    chain.getBlockAtHeight(200, function (err, block) {
+      t.ok(err)
+      t.notOk(block)
+      t.equal(err.message, 'height is higher than tip')
+    })
+
+    chain.getBlockAtHeight(-10, function (err, block) {
+      t.ok(err)
+      t.notOk(block)
+      t.equal(err.message, 'height must be >= 0')
+    })
+  })
+
+  t.test('get block at time', function (t) {
+    t.plan(16)
+
+    chain.getBlockAtTime(genesis.time + 10, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 10)
+      t.equal(block.header.hash, headers[9].hash)
+    })
+
+    chain.getBlockAtTime(genesis.time + 90, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 90)
+      t.equal(block.header.hash, headers[89].hash)
+    })
+
+    chain.getBlockAtTime(genesis.time + 200, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 100)
+      t.equal(block.header.hash, headers[99].hash)
+    })
+
+    chain.getBlockAtTime(genesis.time - 10, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 0)
+      t.equal(block.header.hash, genesis.hash)
+    })
+  })
+
+  t.test('get block', function (t) {
+    t.plan(14)
+
+    chain.getBlock(u.toHash(headers[50].hash), function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 51)
+      t.equal(block.header.hash, headers[50].hash)
+    })
+
+    chain.getBlock(10, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 10)
+      t.equal(block.header.hash, headers[9].hash)
+    })
+
+    chain.getBlock(genesis.time + 20, function (err, block) {
+      t.error(err)
+      t.ok(block)
+      t.equal(block.height, 20)
+      t.equal(block.header.hash, headers[19].hash)
+    })
+
+    chain.getBlock(':)', function (err, block) {
+      t.ok(err)
+      t.equal(err.message, '"at" must be a block hash, height, or timestamp')
+    })
   })
 
   t.test('teardown', function (t) {
