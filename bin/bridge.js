@@ -2,7 +2,6 @@
 
 var Networks = require('bitcore').Networks
 var Node = require('../lib/node.js')
-var Wallet = require('../lib/wallet.js')
 
 var node = new Node({
   network: Networks.testnet,
@@ -24,9 +23,9 @@ node.chain
   .on('sync', function (tip) {
     var max = node.chain.syncHeight
     if (!max && node.chain.downloadPeer) max = node.chain.downloadPeer.bestHeight
-    console.log('Sync progress:', tip.height + ' / ' + max,
+    console.log('Chain sync progress:', tip.height + ' / ' + max,
       '(' + (Math.round(tip.height / max * 1000) / 10) + '%)',
-      '-', new Date(tip.header.time * 1000))
+      '-', new Date(tip.header.time * 1000).toLocaleDateString())
   })
   .on('synced', function (tip) {
     console.log('Chain up-to-date. height: ' + tip.height
@@ -39,7 +38,12 @@ node.chain
   })
 node.start()
 
-var w = new Wallet({ path: 'data', id: 'main', node: node }, function (err) {
+var w = node.createWallet('main', function (err) {
   if (err) return console.error(err)
-  console.log(w.getAddress())
+})
+w.on('error', function (err) {
+  console.error(err.stack)
+})
+w.on('receive', function (e) {
+  console.log('Received funds: ' + e.amount + ' satoshis, txid: ' + e.transaction.hash)
 })
