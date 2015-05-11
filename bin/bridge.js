@@ -47,3 +47,6 @@ w.on('error', function (err) {
 w.on('receive', function (e) {
   console.log('Received funds: ' + e.amount + ' satoshis, txid: ' + e.transaction.hash)
 })
+w.on('send', function (e) {
+  console.log('Sent funds: ' + e.amount + ' satoshis, txid: ' + e.transaction.hash)
+})
