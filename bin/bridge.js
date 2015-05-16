@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 var Networks = require('bitcore').Networks
-
 var Bridge = require('../lib/bridge.js')
+var argv = require('minimist')(process.argv.slice(2))
+
 var bridge = new Bridge({
-  network: Networks.defaultNetwork // TODO: CLI option to use testnet
+  network: argv.testnet ? Networks.testnet : Networks.livenet,
+  localPeer: argv.local
 })
 
 bridge.on('connection', function (peer, id) {
