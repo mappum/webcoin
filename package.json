@@ -24,6 +24,7 @@
     "bitcoin": "^2.3.0",
     "bitcore": "^0.12.4",
     "bitcore-p2p": "^0.14.0",
+    "bitcore-p2p-browserify": "^0.14.0",
     "browserify-buffertools": "^1.0.2",
     "buffertools": "^2.1.2",
     "level-js": "^2.1.6",
@@ -39,7 +40,8 @@
     "tape": "^4.0.0"
   },
   "browser": {
-    "buffertools": "browserify-buffertools"
+    "buffertools": "browserify-buffertools",
+    "bitcore-p2p": "bitcore-p2p-browserify"
   },
   "optionalDependencies": {
     "wrtc": "0.0.55"
