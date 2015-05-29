@@ -396,34 +396,44 @@ test('blockchain queries', function (t) {
 })
 
 test('blockchain sync', function (t) {
-  t.plan(8)
-
   var peers = new PeerGroup()
   peers.on('error', function (err) { console.error(err) })
   peers.connect()
 
-  var store = new BlockStore({
-    path: storePath,
-    reset: function (err) {
-      t.error(err, 'opened BlockStore')
+  var store, chain
 
-      var chain = new Blockchain({ peerGroup: peers, store: store })
-
-      chain.on('syncing', function (peer) {
-        t.ok(peer, 'downloading from peer')
-      })
-      chain.on('synced', function (tip) {
-        t.ok(tip)
-        t.equal(tip.height, 3000)
-      })
-      chain.sync({ to: 3000 }, function (block) {
-        t.ok(block)
-        t.equal(block.height, 3000)
-        t.equal(block.header.hash, '000000004a81b9aa469b11649996ecb0a452c16d1181e72f9f980850a1c5ecce')
-
-        peers.disconnect()
-        endStore(store, t)
-      })
-    }
+  t.test('setup', function (t) {
+    store = new BlockStore({
+      path: storePath,
+      reset: function (err) {
+        t.error(err, 'opened BlockStore')
+        chain = new Blockchain({ peerGroup: peers, store: store })
+        t.end()
+      }
+    })
   })
+
+  t.test('sync', function (t) {
+    t.plan(6)
+    chain.on('syncing', function (peer) {
+      t.ok(peer, 'downloading from peer')
+    })
+    chain.on('synced', function (tip) {
+      t.ok(tip)
+      t.equal(tip.height, 3000)
+    })
+    chain.sync({ to: 3000 }, function (block) {
+      t.ok(block)
+      t.equal(block.height, 3000)
+      t.equal(block.header.hash, '000000004a81b9aa469b11649996ecb0a452c16d1181e72f9f980850a1c5ecce')
+
+      peers.disconnect()
+      t.end()
+    })
+  })
+
+  t.test('teardown', function (t) {
+    endStore(store, t)
+  })
+  t.end()
 })
