@@ -1,6 +1,24 @@
 language: node_js
 node_js:
-  - "node"
-  - "iojs"
+- node
+- iojs
 notifications:
   email: false
+sudo: false
+cache:
+  directories:
+  - node_modules
+before_deploy:
+- npm config set spin false --global
+env:
+  global:
+    secure: m6p1D/ZH4DvYDaM9d/Pqvp9H5TD0VGvBJWUVdWC2By2Q9J4pkPL52fK5tSLF76XLC0JooV0OIBSp0K1G1oAC+xBUl1u0Am/ZkOGFCDUX1Bb07NNEewQJJ+kjyxT7AoOb6hKq+zPrDwqSUeTP6278LiC3tGS91eLI6bZPXol5LW8=
+deploy:
+  provider: npm
+  email: mappum@gmail.com
+  skip_cleanup: true
+  api_key:
+    secure: oMJE30hCeeU1uHxZJnJS9ftgguKhD2TOANDnYriZeXrdyRSS0Mpd4NzkwxlLQixQID/Wri/ESiN9dRvsXvmPbg2tCmb0h9/IDmY43V5w8IXu434vf6PlOfKPMlivHDGHQf8/nr1R8fCP2NM5vUKGxvYJkhyW2ZlxY5uj81bARr8=
+  on:
+    branch: master
+    repo: mappum/webcoin
