@@ -1,5 +1,13 @@
 #!/usr/bin/env node
 
+try {
+  require('wrtc')
+} catch(e) {
+  console.error('The "wrtc" package is not installed.')
+  console.error('Please install its dependencies (see https://github.com/js-platform/node-webrtc#prerequisites), then install it with `npm install wrtc`.')
+  process.exit()
+}
+
 var Networks = require('bitcore').Networks
 var Bridge = require('../lib/bridge.js')
 var argv = require('minimist')(process.argv.slice(2))
