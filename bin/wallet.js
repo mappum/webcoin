@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-var Networks = require('bitcore').Networks
 var Node = require('../lib/node.js')
 
 var node = new Node({
-  network: Networks.livenet,
-  path: 'data',
-  acceptWeb: true
+  network: 'alpha',
+  path: 'data'
 })
 node.on('error', function (err) {
   console.error(err)
