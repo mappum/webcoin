@@ -37,7 +37,7 @@ function createBlock (prev, nonce, bits) {
       bits: bits || (prev ? prev.bits : u.toCompactTarget(maxTarget)),
       nonce: i++
     })
-  } while (!header.validProofOfWork)
+  } while (!header.validProofOfWork())
   return header
 }
 
