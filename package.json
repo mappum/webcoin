@@ -22,24 +22,24 @@
   "author": "Matt Bell <mappum@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "async": "^1.0.0",
-    "bitcoin": "^2.3.0",
-    "bitcore": "^0.12.4",
+    "async": "^1.2.1",
+    "bitcoin": "^2.3.1",
+    "bitcore": "^0.12.10",
     "bitcore-p2p": "^0.14.0",
     "bitcore-p2p-browserify": "^0.14.0",
     "browserify-buffertools": "^1.0.2",
     "buffertools": "^2.1.2",
     "level-js": "^2.1.6",
-    "leveldown": "^1.0.6",
-    "levelup": "^1.0.0-5",
+    "leveldown": "^1.3.0",
+    "levelup": "^1.2.1",
     "minimist": "^1.1.1",
-    "mkdirp": "^0.5.0",
+    "mkdirp": "^0.5.1",
     "peerhub": "^0.1.0",
     "setimmediate": "^1.0.2"
   },
   "devDependencies": {
-    "semantic-release": "^3.3.1",
-    "standard": "^3.8.0",
+    "semantic-release": "^3.4.1",
+    "standard": "^4.3.2",
     "tape": "^4.0.0"
   },
   "browser": {
