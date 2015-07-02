@@ -27,7 +27,8 @@ function endStore (store, t) {
 
 var maxTarget = new BN('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 'hex')
 function createBlock (prev, nonce, bits) {
-  var i = nonce || 0, header
+  var i = nonce || 0
+  var header
   do {
     header = new bitcore.BlockHeader({
       version: 1,
