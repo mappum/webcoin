@@ -28,13 +28,13 @@ node.chain
       '-', new Date(tip.header.time * 1000).toLocaleDateString())
   })
   .on('synced', function (tip) {
-    console.log('Chain up-to-date. height: ' + tip.height
-      + ', hash: ' + tip.header.hash)
+    console.log('Chain up-to-date. height: ' + tip.height +
+      ', hash: ' + tip.header.hash)
   })
   .on('block', function (block) {
     if (node.chain.syncing) return
-    console.log('Received a new block. height: ' + block.height
-      + ', hash: ' + block.header.hash)
+    console.log('Received a new block. height: ' + block.height +
+      ', hash: ' + block.header.hash)
   })
 node.start()
 
