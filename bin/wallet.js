@@ -20,6 +20,9 @@ node.peers.on('peer', function (peer) {
 })
 
 node.chain
+  .on('syncing', function (peer) {
+    console.log('Downloading block(s) from peer:', peer.remoteAddress, peer.subversion)
+  })
   .on('sync', function (tip) {
     var max = node.chain.syncHeight
     if (!max && node.chain.downloadPeer) max = node.chain.downloadPeer.bestHeight
@@ -40,13 +43,20 @@ node.start()
 
 var w = node.createWallet('main', function (err) {
   if (err) return console.error(err)
+  console.log('Wallet address:', w.getAddress().toString())
 })
 w.on('error', function (err) {
-  console.error(err.stack)
+  console.error(err, err.stack)
 })
 w.on('receive', function (e) {
   console.log('Received funds: ' + e.amount + ' satoshis, txid: ' + e.transaction.hash)
 })
 w.on('send', function (e) {
   console.log('Sent funds: ' + e.amount + ' satoshis, txid: ' + e.transaction.hash)
+})
+w.on('sync', function (block) {
+  console.log('Wallet synced to height ' + block.height)
+})
+w.on('syncing', function (tip) {
+  console.log('Starting wallet sync, currently at height ' + tip.height)
 })
