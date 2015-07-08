@@ -22,14 +22,14 @@
   "author": "Matt Bell <mappum@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "async": "^1.2.1",
-    "bitcoin": "^2.3.1",
-    "bitcore": "^0.12.10",
-    "bitcore-p2p": "^0.14.0",
-    "bitcore-p2p-browserify": "^0.14.0",
+    "async": "^1.3.0",
+    "bitcoin": "^2.3.2",
+    "bitcore": "^0.12.12",
+    "bitcore-p2p": "^0.14.2",
+    "bitcore-p2p-browserify": "^0.14.2",
     "browserify-buffertools": "^1.0.2",
-    "buffertools": "^2.1.2",
-    "level-js": "^2.1.6",
+    "buffertools": "^2.1.3",
+    "level-js": "^2.2.1",
     "leveldown": "^1.3.0",
     "levelup": "^1.2.1",
     "minimist": "^1.1.1",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "semantic-release": "^3.4.1",
-    "standard": "^4.3.2",
+    "standard": "^4.5.2",
     "tape": "^4.0.0"
   },
   "browser": {
@@ -47,7 +47,7 @@
     "bitcore-p2p": "bitcore-p2p-browserify"
   },
   "optionalDependencies": {
-    "wrtc": "0.0.55"
+    "wrtc": "0.0.56"
   },
   "repository": {
     "type": "git",
