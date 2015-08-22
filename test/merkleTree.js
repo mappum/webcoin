@@ -96,6 +96,5 @@ test('build from MerkleBlock', function (t) {
     })
   })
 
-
   t.end()
 })
