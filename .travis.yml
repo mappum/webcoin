@@ -4,6 +4,7 @@ node_js:
 - iojs
 notifications:
   email: false
+  irc: "chat.freenode.net#webcoin"
 sudo: false
 cache:
   directories:
