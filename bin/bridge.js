@@ -2,7 +2,7 @@
 
 try {
   require('wrtc')
-} catch(e) {
+} catch (e) {
   console.error('The "wrtc" package is not installed.')
   console.error('Please install its dependencies (see https://github.com/js-platform/node-webrtc#prerequisites), then install it with `npm install wrtc`.')
   process.exit()

@@ -6,7 +6,7 @@ var constants = require('../lib/constants.js')
 
 try {
   var leveldown = require('leveldown')
-} catch(err) {}
+} catch (err) {}
 
 function deleteStore (store, cb) {
   if (leveldown) {
