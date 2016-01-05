@@ -1,19 +1,29 @@
 language: node_js
 node_js:
-- node
-- iojs
+  - "5"
+  - "4"
+compiler: clang-3.6
+env:
+  global:
+    - secure: m6p1D/ZH4DvYDaM9d/Pqvp9H5TD0VGvBJWUVdWC2By2Q9J4pkPL52fK5tSLF76XLC0JooV0OIBSp0K1G1oAC+xBUl1u0Am/ZkOGFCDUX1Bb07NNEewQJJ+kjyxT7AoOb6hKq+zPrDwqSUeTP6278LiC3tGS91eLI6bZPXol5LW8=
+    - CXX=clang-3.6
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.6
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.6
+      - g++-4.8
 notifications:
   email: false
   irc: "chat.freenode.net#webcoin"
 sudo: false
 cache:
   directories:
-  - node_modules
+    - node_modules
 before_deploy:
-- npm config set spin false --global
-env:
-  global:
-    secure: m6p1D/ZH4DvYDaM9d/Pqvp9H5TD0VGvBJWUVdWC2By2Q9J4pkPL52fK5tSLF76XLC0JooV0OIBSp0K1G1oAC+xBUl1u0Am/ZkOGFCDUX1Bb07NNEewQJJ+kjyxT7AoOb6hKq+zPrDwqSUeTP6278LiC3tGS91eLI6bZPXol5LW8=
+  - npm config set spin false --global
 deploy:
   provider: npm
   email: mappum@gmail.com
