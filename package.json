@@ -38,7 +38,7 @@
     "setimmediate": "^1.0.2"
   },
   "devDependencies": {
-    "semantic-release": "^4.3.4",
+    "semantic-release": "^3.4.1",
     "standard": "^5.2.1",
     "tape": "^4.2.0"
   },
