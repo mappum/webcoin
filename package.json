@@ -34,7 +34,7 @@
     "levelup": "^1.2.1",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "peerhub": "^0.1.0",
+    "peerhub": "^0.1.1",
     "setimmediate": "^1.0.2"
   },
   "devDependencies": {
