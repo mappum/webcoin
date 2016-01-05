@@ -8,7 +8,7 @@ try {
   process.exit()
 }
 
-var Networks = require('bitcore').Networks
+var Networks = require('bitcore-lib').Networks
 var Bridge = require('../lib/bridge.js')
 var argv = require('minimist')(process.argv.slice(2))
 

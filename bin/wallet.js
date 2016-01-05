@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var Networks = require('bitcore').Networks
+var Networks = require('bitcore-lib').Networks
 var Node = require('../lib/node.js')
 
 var node = new Node({

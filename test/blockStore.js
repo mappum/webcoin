@@ -1,5 +1,5 @@
 var test = require('tape')
-var bitcore = require('bitcore')
+var bitcore = require('bitcore-lib')
 var BlockStore = require('../lib/blockStore.js')
 var u = require('../lib/utils.js')
 

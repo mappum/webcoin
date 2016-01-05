@@ -1,5 +1,5 @@
 var test = require('tape')
-var Networks = require('bitcore').Networks
+var Networks = require('bitcore-lib').Networks
 var Node = require('../lib/node.js')
 // var Wallet = require('../lib/wallet.js')
 

@@ -1,5 +1,5 @@
 var test = require('tape')
-var bitcore = require('bitcore')
+var bitcore = require('bitcore-lib')
 var BN = bitcore.crypto.BN
 var PeerGroup = require('../lib/peerGroup.js')
 var BlockStore = require('../lib/blockStore.js')

@@ -13,5 +13,5 @@ module.exports = {
   Wallet: require('./lib/wallet.js'),
   WebPeer: require('./lib/webPeer.js'),
 
-  bitcore: require('bitcore')
+  bitcore: require('bitcore-lib')
 }

@@ -1,6 +1,6 @@
 var crypto = require('crypto')
 var test = require('tape')
-var Transaction = require('bitcore').Transaction
+var Transaction = require('bitcore-lib').Transaction
 var TransactionStore = require('../lib/transactionStore.js')
 var constants = require('../lib/constants.js')
 
