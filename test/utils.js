@@ -10,11 +10,11 @@ test('toHash', function (t) {
   t.end()
 })
 
-var storePath = 'data/' + process.pid + '.store'
-
 test('createStore', function (t) {
   t.test('simple createStore', function (t) {
-    var store = u.createStore({ path: storePath }, function (err) {
+    var path = 'data/' + process.pid +
+      Math.random().toString(36).slice(3) + '.store'
+    var store = u.createStore({ path: path }, function (err) {
       t.error(err)
       store.close(t.end)
     })
