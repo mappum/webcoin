@@ -1,7 +1,6 @@
 language: node_js
 node_js:
 - '5'
-- '4'
 compiler: clang-3.6
 env:
   global:
