@@ -13,6 +13,33 @@ Webcoin is a Bitcoin client that works in Node.js and the browser. In the browse
 
 You can use Webcoin to add Bitcoin payments to your application, without the need to hold your users' funds, and without making them trust any third-parties with their money. Webcoin is an [SPV](https://en.bitcoin.it/wiki/Thin_Client_Security#Simplified_Payment_Verification_.28SPV.29_Clients) light client, so it only uses a minimal amount of bandwidth and storage; it even works great on mobile devices!
 
+## Status
+
+Much of Webcoin is already written and works well, including:
+
+- Downloading block headers from peers
+- Verifying block headers
+- Creating HD wallets
+- Filtering transactions with Bloom filters
+- Detecting incoming transactions confirmed in blocks
+
+I am currently making some major refactors to the codebase, and documenting all of it. Much of the code in this repo is being broken out into smaller modules, each with comprehensive tests and docs. You can see the progress below:
+
+### Roadmap
+
+- [x] [`blockchain-spv`](https://github.com/mappum/blockchain-spv) - Stores blockchain headers and verifies with SPV
+- [x] [`bitcoin-util`](https://github.com/mappum/bitcoin-uti
+  l) - Utility functions for Bitcoin hashes and targets
+- [ ] `bitcoin-wallet` - Sends and receives coins, and stores unspent outputs
+- [ ] `bitcoin-net` - Bitcoin networking that works in Node and the browser
+- [ ] `bitcoin-web-bridge` - A proxy that bridges the Bitcoin TCP and WebRTC networks
+- [ ] Parameters
+  - [x] [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin constants and network rules to use with Webcoin
+  - [ ] `webcoin-testnet3` - Bitcoin Testnet 3 constants and network rules to use with Webcoin
+  - [ ] `webcoin-litecoin` - Litecoin constants and network rules to use with Webcoin
+  - [ ] `webcoin-zcash-testnet` - Zcash Testnet constants and network rules to use with Webcoin
+  - [ ] `webcoin-elements-alpha` - Elements Alpha constants and network rules to use with Webcoin
+
 ## License (MIT)
 
 Copyright 2015 Matt Bell
