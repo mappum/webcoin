@@ -28,10 +28,8 @@ I am currently making some major refactors to the codebase, and documenting all 
 ### Roadmap
 
 - [x] [`blockchain-spv`](https://github.com/mappum/blockchain-spv) - Stores blockchain headers and verifies with SPV
-- [x] [`bitcoin-util`](https://github.com/mappum/bitcoin-uti
-  l) - Utility functions for Bitcoin hashes and targets
-- [x] [`bitcoin-merkle-tree`](https://github.com/mappum/bitcoin-merkle-tree
-  l) - Verify bitcoin Merkle trees (BIP37)
+- [x] [`bitcoin-util`](https://github.com/mappum/bitcoin-util) - Utility functions for Bitcoin hashes and targets
+- [x] [`bitcoin-merkle-tree`](https://github.com/mappum/bitcoin-merkle-treel) - Verify bitcoin Merkle trees (BIP37)
 - [ ] `bitcoin-wallet` - Sends and receives coins, and stores unspent outputs
 - [ ] `bitcoin-net` - Bitcoin networking that works in Node and the browser
 - [ ] `bitcoin-web-bridge` - A proxy that bridges the Bitcoin TCP and WebRTC networks
