@@ -29,7 +29,7 @@ I am currently making some major refactors to the codebase, and documenting all 
 
 - [x] [`blockchain-spv`](https://github.com/mappum/blockchain-spv) - Stores blockchain headers and verifies with SPV
 - [x] [`bitcoin-util`](https://github.com/mappum/bitcoin-util) - Utility functions for Bitcoin hashes and targets
-- [x] [`bitcoin-merkle-tree`](https://github.com/mappum/bitcoin-merkle-tree) - Verify bitcoin Merkle trees (BIP37)
+- [x] [`bitcoin-merkle-proof`](https://github.com/mappum/bitcoin-merkle-proof) - Verify bitcoin Merkle proofs
 - [ ] `bitcoin-wallet` - Sends and receives coins, and stores unspent outputs
 - [ ] [`bitcoin-net`](https://github.com/mappum/bitcoin-net) - High-level Bitcoin networking
 - [ ] [`bitcoin-protocol`](https://github.com/mappum/bitcoin-protocol) - Bitcoin network protocol streams
