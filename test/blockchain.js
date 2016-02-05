@@ -6,6 +6,7 @@ var BlockStore = require('../lib/blockStore.js')
 var Blockchain = require('../lib/blockchain.js')
 var u = require('../lib/utils.js')
 var constants = require('../lib/constants.js')
+var common = require('./common.js')
 
 try {
   var leveldown = require('leveldown')
@@ -49,7 +50,7 @@ test('creating blockchain instances', function (t) {
 
   t.test('create blockchain with instantiated BlockStore', function (t) {
     t.doesNotThrow(function () {
-      var peers = new PeerGroup()
+      var peers = new PeerGroup({wrtc: common.wrtc})
       var store = new BlockStore({ path: storePath })
       var chain = new Blockchain({ peerGroup: peers, store: store })
       endStore(chain.store, t)
@@ -58,7 +59,7 @@ test('creating blockchain instances', function (t) {
 
   t.test('create blockchain with path instead of BlockStore', function (t) {
     t.doesNotThrow(function () {
-      var peers = new PeerGroup()
+      var peers = new PeerGroup({wrtc: common.wrtc})
       var chain = new Blockchain({ peerGroup: peers, path: storePath })
       endStore(chain.store, t)
     })
@@ -397,7 +398,7 @@ test('blockchain queries', function (t) {
 })
 
 test('blockchain sync', function (t) {
-  var peers = new PeerGroup()
+  var peers = new PeerGroup({wrtc: common.wrtc})
   peers.on('error', function (err) { console.error(err) })
   peers.connect()
 

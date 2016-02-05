@@ -1,7 +1,7 @@
 var test = require('tape')
 var Networks = require('bitcore-lib').Networks
 var Node = require('../lib/node.js')
-// var Wallet = require('../lib/wallet.js')
+var common = require('./common.js')
 
 test('Node wallet creation', function (t) {
   var node
@@ -9,6 +9,7 @@ test('Node wallet creation', function (t) {
   t.test('setup', function (t) {
     node = new Node({
       network: Networks.testnet,
+      wrtc: common.wrtc,
       path: 'data/' + process.pid,
       to: 1000
     })

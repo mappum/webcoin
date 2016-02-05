@@ -1,6 +1,7 @@
 var test = require('tape')
 var Networks = require('bitcore-lib').Networks
 var Node = require('../lib/node.js')
+var common = require('./common.js')
 
 test('Node constructor', function (t) {
   var HEIGHT = 1000
@@ -10,6 +11,7 @@ test('Node constructor', function (t) {
     t.plan(1)
     node = new Node({
       network: Networks.testnet,
+      wrtc: common.wrtc,
       path: 'data/' + process.pid,
       to: HEIGHT
     })

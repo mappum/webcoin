@@ -47,9 +47,6 @@
     "buffertools": "browserify-buffertools",
     "bitcore-p2p": "bitcore-p2p-browserify"
   },
-  "optionalDependencies": {
-    "wrtc": "0.0.58"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mappum/webcoin"
