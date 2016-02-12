@@ -13,6 +13,7 @@ test('Node constructor', function (t) {
       path: 'data/' + process.pid,
       to: HEIGHT
     })
+    node.on('error', console.log)
     node.start(t.error)
   })
 
