@@ -30,3 +30,7 @@ bridge.on('connection', function (peer, id) {
 bridge.on('bridge', function (webPeer, tcpPeer) {
   console.log('Bridging WebRTC connection to tcp://' + tcpPeer.remoteAddress + ':' + tcpPeer.remotePort)
 })
+
+bridge.on('error', function (err) {
+  console.log('Error', err)
+})
