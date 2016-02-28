@@ -31,15 +31,15 @@ I am currently making some major refactors to the codebase, and documenting all 
 - [x] [`bitcoin-util`](https://github.com/mappum/bitcoin-util) - Utility functions for Bitcoin hashes and targets
 - [x] [`bitcoin-merkle-proof`](https://github.com/mappum/bitcoin-merkle-proof) - Verify bitcoin Merkle proofs
 - [ ] `bitcoin-wallet` - Sends and receives coins, and stores unspent outputs
-- [ ] [`bitcoin-net`](https://github.com/mappum/bitcoin-net) - High-level Bitcoin networking
-- [ ] [`bitcoin-protocol`](https://github.com/mappum/bitcoin-protocol) - Bitcoin network protocol streams
-- [ ] `bitcoin-web-bridge` - A proxy that bridges the Bitcoin TCP and WebRTC networks
+- [x] [`bitcoin-net`](https://github.com/mappum/bitcoin-net) - High-level Bitcoin networking
+- [x] [`bitcoin-protocol`](https://github.com/mappum/bitcoin-protocol) - Bitcoin network protocol streams
+- [x] [`webcoin-bridge`](https://github.com/mappum/webcoin-bridge) - A proxy that bridges the Bitcoin TCP and WebRTC networks
 - [ ] Parameters
-  - [x] [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin constants and network rules to use with Webcoin
-  - [ ] `webcoin-testnet3` - Bitcoin Testnet 3 constants and network rules to use with Webcoin
-  - [ ] `webcoin-litecoin` - Litecoin constants and network rules to use with Webcoin
-  - [ ] `webcoin-zcash-testnet` - Zcash Testnet constants and network rules to use with Webcoin
-  - [ ] `webcoin-elements-alpha` - Elements Alpha constants and network rules to use with Webcoin
+  - [x] [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin params for Webcoin
+  - [x] [`webcoin-bitcoin-testnet`](https://github.com/mappum/webcoin-bitcoin-testnet) - Bitcoin Testnet 3 params for Webcoin
+  - [ ] `webcoin-litecoin` - Litecoin params for Webcoin
+  - [ ] `webcoin-zcash-alpha` - Zcash Alpha params for Webcoin
+  - [ ] `webcoin-elements-alpha` - Elements Alpha params for Webcoin
 
 ## License (MIT)
 
