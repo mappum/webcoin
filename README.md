@@ -35,6 +35,7 @@ I am currently making some major refactors to the codebase, and documenting all 
 - [x] [`bitcoin-protocol`](https://github.com/mappum/bitcoin-protocol) - Bitcoin network protocol streams
 - [x] [`webcoin-bridge`](https://github.com/mappum/webcoin-bridge) - A proxy that bridges the Bitcoin TCP and WebRTC networks
 - [ ] Parameters
+  - [ ] `webcoin-params` - Abstract params
   - [x] [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin params for Webcoin
   - [x] [`webcoin-bitcoin-testnet`](https://github.com/mappum/webcoin-bitcoin-testnet) - Bitcoin Testnet 3 params for Webcoin
   - [ ] `webcoin-litecoin` - Litecoin params for Webcoin
