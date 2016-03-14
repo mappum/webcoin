@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run standard && ./node_modules/.bin/tape test/*.js",
-    "standard": "./node_modules/.bin/standard lib/*.js test/*.js bin/*.js index.js ",
+    "standard": "standard lib/*.js test/*.js bin/*.js index.js ",
     "prepublish": "semantic-release pre",
     "postpublish": "semantic-release post"
   },
@@ -36,7 +36,8 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "peerhub": "^0.1.1",
-    "setimmediate": "^1.0.2"
+    "setimmediate": "^1.0.2",
+    "wrtc": "0.0.58"
   },
   "devDependencies": {
     "semantic-release": "^3.4.1",
@@ -52,6 +53,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mappum/webcoin"
+    "url": "git+https://github.com/mappum/webcoin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mappum/webcoin/issues"
+  },
+  "homepage": "https://github.com/mappum/webcoin#readme",
+  "directories": {
+    "test": "test"
   }
 }
