@@ -23,9 +23,9 @@ Much of Webcoin is already written and works well, including:
 - Filtering transactions with Bloom filters
 - Detecting incoming transactions confirmed in blocks
 
-I am currently making some major refactors to the codebase, and documenting all of it. Much of the code in this repo is being broken out into smaller modules, each with comprehensive tests and docs. You can check out the modules below to see progress:
+I am currently making some major refactors to the codebase, and documenting all of it. Much of the code in this repo is being broken out into smaller modules, each with comprehensive tests and docs.
 
-### Roadmap
+### Modules
 
 | module | version | tests | description |
 |---|---|---|---|
@@ -40,6 +40,7 @@ I am currently making some major refactors to the codebase, and documenting all 
 | [webcoin-bridge][webcoin-bridge] | [![][webcoin-bridge-ni]][webcoin-bridge-nu] | [![][webcoin-bridge-ti]][webcoin-bridge-tu] | A proxy that bridges the Bitcoin TCP and WebRTC networks
 | [webcoin-params][webcoin-params] | [![][webcoin-params-ni]][webcoin-params-nu] | [![][webcoin-params-ti]][webcoin-params-tu] | Abstract parameters, used for supporting other cryptocurrencies
 | [webcoin-param-tests][webcoin-param-tests] | [![][webcoin-param-tests-ni]][webcoin-param-tests-nu] | [![][webcoin-param-tests-ti]][webcoin-param-tests-tu] | Tests for parameters
+| [electron-webrtc][electron-webrtc] | [![][electron-webrtc-ni]][electron-webrtc-nu] | [![][electron-webrtc-ti]][electron-webrtc-tu] | WebRTC for Node via a hidden Electron process
 
 [webcoin]: https://github.com/mappum/webcoin
 [webcoin-ni]: https://img.shields.io/npm/v/webcoin.svg
@@ -106,6 +107,12 @@ I am currently making some major refactors to the codebase, and documenting all 
 [webcoin-param-tests-nu]: https://www.npmjs.com/package/webcoin-param-tests
 [webcoin-param-tests-ti]: https://travis-ci.org/mappum/webcoin-param-tests.svg?branch=master
 [webcoin-param-tests-tu]: https://travis-ci.org/mappum/webcoin-param-tests
+
+[electron-webrtc]: https://github.com/mappum/electron-webrtc
+[electron-webrtc-ni]: https://img.shields.io/npm/v/electron-webrtc.svg
+[electron-webrtc-nu]: https://www.npmjs.com/package/electron-webrtc
+[electron-webrtc-ti]: https://travis-ci.org/mappum/electron-webrtc.svg?branch=master
+[electron-webrtc-tu]: https://travis-ci.org/mappum/electron-webrtc
 
 #### Networks
 - [x]  [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin params for Webcoin
