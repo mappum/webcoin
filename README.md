@@ -27,6 +27,8 @@ I am currently making some major refactors to the codebase, and documenting all 
 
 ### Modules
 
+Webcoin is made up of many small modules, most of which can each be used independently.
+
 | module | version | tests | description |
 |---|---|---|---|
 | **[webcoin][webcoin]** | [![][webcoin-ni]][webcoin-nu] | [![][webcoin-ti]][webcoin-tu] | **SPV Bitcoin client for Node and the browser (this module)**
@@ -114,12 +116,41 @@ I am currently making some major refactors to the codebase, and documenting all 
 [electron-webrtc-ti]: https://travis-ci.org/mappum/electron-webrtc.svg?branch=master
 [electron-webrtc-tu]: https://travis-ci.org/mappum/electron-webrtc
 
-#### Networks
-- [x]  [`webcoin-bitcoin`](https://github.com/mappum/webcoin-bitcoin) - Bitcoin params for Webcoin
-- [x] [`webcoin-bitcoin-testnet`](https://github.com/mappum/webcoin-bitcoin-testnet) - Bitcoin Testnet 3 params for Webcoin
-- [ ] `webcoin-litecoin` - Litecoin params for Webcoin
-- [ ] `webcoin-zcash-alpha` - Zcash Alpha params for Webcoin
-- [ ] `webcoin-elements-alpha` - Elements Alpha params for Webcoin
+#### Parameters
+
+Webcoin was built from the ground-up with multiple cryptocurrencies in mind. The following modules are parameters which can be plugged in to Webcoin in order to support other currency networks.
+
+| network | module | version | tests |
+|---|---|---|---|
+| Bitcoin | [webcoin-bitcoin][webcoin-bitcoin] | [![][webcoin-bitcoin-ni]][webcoin-bitcoin-nu] | [![][webcoin-bitcoin-ti]][webcoin-bitcoin-tu] |
+| Bitcoin Testnet | [webcoin-bitcoin-testnet][webcoin-bitcoin-testnet] | [![][webcoin-bitcoin-testnet-ni]][webcoin-bitcoin-testnet-nu] | [![][webcoin-bitcoin-testnet-ti]][webcoin-bitcoin-testnet-tu] |
+| Litecoin | [webcoin-litecoin][webcoin-litecoin] (UNFINISHED) | [![][webcoin-litecoin-ni]][webcoin-litecoin-nu] | [![][webcoin-litecoin-ti]][webcoin-litecoin-tu] |
+| Zcash Alpha | [webcoin-zcash-alpha][webcoin-zcash-alpha] (UNFINISHED) | [![][webcoin-zcash-alpha-ni]][webcoin-zcash-alpha-nu] | [![][webcoin-zcash-alpha-ti]][webcoin-zcash-alpha-tu] |
+
+
+[webcoin-bitcoin]: https://github.com/mappum/webcoin-bitcoin
+[webcoin-bitcoin-ni]: https://img.shields.io/npm/v/webcoin-bitcoin.svg
+[webcoin-bitcoin-nu]: https://www.npmjs.com/package/webcoin-bitcoin
+[webcoin-bitcoin-ti]: https://travis-ci.org/mappum/webcoin-bitcoin.svg?branch=master
+[webcoin-bitcoin-tu]: https://travis-ci.org/mappum/webcoin-bitcoin
+
+[webcoin-bitcoin-testnet]: https://github.com/mappum/webcoin-bitcoin-testnet
+[webcoin-bitcoin-testnet-ni]: https://img.shields.io/npm/v/webcoin-bitcoin-testnet.svg
+[webcoin-bitcoin-testnet-nu]: https://www.npmjs.com/package/webcoin-bitcoin-testnet
+[webcoin-bitcoin-testnet-ti]: https://travis-ci.org/mappum/webcoin-bitcoin-testnet.svg?branch=master
+[webcoin-bitcoin-testnet-tu]: https://travis-ci.org/mappum/webcoin-bitcoin-testnet
+
+[webcoin-litecoin]: https://github.com/mappum/webcoin-litecoin
+[webcoin-litecoin-ni]: https://img.shields.io/npm/v/webcoin-litecoin.svg
+[webcoin-litecoin-nu]: https://www.npmjs.com/package/webcoin-litecoin
+[webcoin-litecoin-ti]: https://travis-ci.org/mappum/webcoin-litecoin.svg?branch=master
+[webcoin-litecoin-tu]: https://travis-ci.org/mappum/webcoin-litecoin
+
+[webcoin-zcash-alpha]: https://github.com/mappum/webcoin-zcash-alpha
+[webcoin-zcash-alpha-ni]: https://img.shields.io/npm/v/webcoin-zcash-alpha.svg
+[webcoin-zcash-alpha-nu]: https://www.npmjs.com/package/webcoin-zcash-alpha
+[webcoin-zcash-alpha-ti]: https://travis-ci.org/mappum/webcoin-zcash-alpha.svg?branch=master
+[webcoin-zcash-alpha-tu]: https://travis-ci.org/mappum/webcoin-zcash-alpha
 
 ## License (MIT)
 
