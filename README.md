@@ -30,19 +30,19 @@ I am currently making some major refactors to the codebase, and documenting all 
 Webcoin is made up of many small modules, most of which can each be used independently.
 
 | module | version | tests | issues | description |
-|---|---|---|---|
-| **[webcoin][webcoin]** | [![][webcoin-ni]][webcoin-nu] | [![][webcoin-ti]][webcoin-tu] | [![][webcoin-ii]][webcoin-iu] | **SPV Bitcoin client for Node and the browser (this module)**
-| [peer-exchange][peer-exchange] | [![][peer-exchange-ni]][peer-exchange-nu] | [![][peer-exchange-ti]][peer-exchange-tu] | [![][peer-exchange-ii]][peer-exchange-iu] | Decentralized p2p signalling and discovery
-| [blockchain-spv][blockchain-spv] | [![][blockchain-spv-ni]][blockchain-spv-nu] | [![][blockchain-spv-ti]][blockchain-spv-tu] | [![][blockchain-spv-ii]][blockchain-spv-iu] | Stores blockchain headers and verifies with SPV
-| [bitcoin-util][bitcoin-util] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-util-ti]][bitcoin-util-tu] | [![][bitcoin-util-ii]][bitcoin-util-iu] | Utility functions for Bitcoin hashes and targets
-| [bitcoin-merkle-proof][bitcoin-merkle-proof] | [![][bitcoin-merkle-proof-ni]][bitcoin-merkle-proof-nu] | [![][bitcoin-merkle-proof-ti]][bitcoin-merkle-proof-tu] | [![][bitcoin-merkle-proof-ii]][bitcoin-merkle-proof-iu] | Verify bitcoin Merkle proofs
+|---|---|---|---|---|
+| **[webcoin][webcoin]** | [![][webcoin-ni]][webcoin-nu] | [![][webcoin-ti]][webcoin-tu] | [![][webcoin-ii]][webcoin-iu] | **SPV Bitcoin client for Node and the browser (this module)** |
+| [peer-exchange][peer-exchange] | [![][peer-exchange-ni]][peer-exchange-nu] | [![][peer-exchange-ti]][peer-exchange-tu] | [![][peer-exchange-ii]][peer-exchange-iu] | Decentralized p2p signalling and discovery |
+| [blockchain-spv][blockchain-spv] | [![][blockchain-spv-ni]][blockchain-spv-nu] | [![][blockchain-spv-ti]][blockchain-spv-tu] | [![][blockchain-spv-ii]][blockchain-spv-iu] | Stores blockchain headers and verifies with SPV |
+| [bitcoin-util][bitcoin-util] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-util-ti]][bitcoin-util-tu] | [![][bitcoin-util-ii]][bitcoin-util-iu] | Utility functions for Bitcoin hashes and targets |
+| [bitcoin-merkle-proof][bitcoin-merkle-proof] | [![][bitcoin-merkle-proof-ni]][bitcoin-merkle-proof-nu] | [![][bitcoin-merkle-proof-ti]][bitcoin-merkle-proof-tu] | [![][bitcoin-merkle-proof-ii]][bitcoin-merkle-proof-iu] | Verify bitcoin Merkle proofs |
 | [bitcoin-wallet][bitcoin-wallet] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-wallet-ii]][bitcoin-wallet-iu] | Sends and receives coins
-| [bitcoin-net][bitcoin-net] | [![][bitcoin-net-ni]][bitcoin-net-nu] | [![][bitcoin-net-ti]][bitcoin-net-tu] | [![][bitcoin-net-ii]][bitcoin-net-iu] | High-level Bitcoin networking
-| [bitcoin-protocol][bitcoin-protocol] | [![][bitcoin-protocol-ni]][bitcoin-protocol-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-protocol-ii]][bitcoin-protocol-iu] | Bitcoin network protocol streams
-| [webcoin-bridge][webcoin-bridge] | [![][webcoin-bridge-ni]][webcoin-bridge-nu] | [![][webcoin-bridge-ti]][webcoin-bridge-tu] | [![][webcoin-bridge-ii]][webcoin-bridge-iu] | A proxy that bridges the Bitcoin TCP and WebRTC networks
-| [webcoin-params][webcoin-params] | [![][webcoin-params-ni]][webcoin-params-nu] | [![][webcoin-params-ti]][webcoin-params-tu] | [![][webcoin-params-ii]][webcoin-params-iu] | Abstract parameters, used for supporting other cryptocurrencies
-| [webcoin-param-tests][webcoin-param-tests] | [![][webcoin-param-tests-ni]][webcoin-param-tests-nu] | [![][webcoin-param-tests-ti]][webcoin-param-tests-tu] | [![][webcoin-param-tests-ii]][webcoin-param-tests-iu] | Tests for parameters
-| [electron-webrtc][electron-webrtc] | [![][electron-webrtc-ni]][electron-webrtc-nu] | [![][electron-webrtc-ti]][electron-webrtc-tu] | [![][electron-webrtc-ii]][electron-webrtc-iu] | WebRTC for Node via a hidden Electron process
+| [bitcoin-net][bitcoin-net] | [![][bitcoin-net-ni]][bitcoin-net-nu] | [![][bitcoin-net-ti]][bitcoin-net-tu] | [![][bitcoin-net-ii]][bitcoin-net-iu] | High-level Bitcoin networking |
+| [bitcoin-protocol][bitcoin-protocol] | [![][bitcoin-protocol-ni]][bitcoin-protocol-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-protocol-ii]][bitcoin-protocol-iu] | Bitcoin network protocol streams |
+| [webcoin-bridge][webcoin-bridge] | [![][webcoin-bridge-ni]][webcoin-bridge-nu] | [![][webcoin-bridge-ti]][webcoin-bridge-tu] | [![][webcoin-bridge-ii]][webcoin-bridge-iu] | A proxy that bridges the Bitcoin TCP and WebRTC networks |
+| [webcoin-params][webcoin-params] | [![][webcoin-params-ni]][webcoin-params-nu] | [![][webcoin-params-ti]][webcoin-params-tu] | [![][webcoin-params-ii]][webcoin-params-iu] | Abstract parameters, used for supporting other cryptocurrencies |
+| [webcoin-param-tests][webcoin-param-tests] | [![][webcoin-param-tests-ni]][webcoin-param-tests-nu] | [![][webcoin-param-tests-ti]][webcoin-param-tests-tu] | [![][webcoin-param-tests-ii]][webcoin-param-tests-iu] | Tests for parameters |
+| [electron-webrtc][electron-webrtc] | [![][electron-webrtc-ni]][electron-webrtc-nu] | [![][electron-webrtc-ti]][electron-webrtc-tu] | [![][electron-webrtc-ii]][electron-webrtc-iu] | WebRTC for Node via a hidden Electron process |
 
 [webcoin]: https://github.com/mappum/webcoin
 [webcoin-ni]: https://img.shields.io/npm/v/webcoin.svg
