@@ -36,6 +36,7 @@ Webcoin is made up of many small modules, most of which can each be used indepen
 | [blockchain-spv][blockchain-spv] | [![][blockchain-spv-ni]][blockchain-spv-nu] | [![][blockchain-spv-ti]][blockchain-spv-tu] | [![][blockchain-spv-ii]][blockchain-spv-iu] | Stores blockchain headers and verifies with SPV |
 | [bitcoin-util][bitcoin-util] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-util-ti]][bitcoin-util-tu] | [![][bitcoin-util-ii]][bitcoin-util-iu] | Utility functions for Bitcoin hashes and targets |
 | [bitcoin-merkle-proof][bitcoin-merkle-proof] | [![][bitcoin-merkle-proof-ni]][bitcoin-merkle-proof-nu] | [![][bitcoin-merkle-proof-ti]][bitcoin-merkle-proof-tu] | [![][bitcoin-merkle-proof-ii]][bitcoin-merkle-proof-iu] | Verify bitcoin Merkle proofs |
+| [bitcoin-filter][bitcoin-filter] | [![][bitcoin-filter-ni]][bitcoin-filter-nu] | [![][bitcoin-filter-ti]][bitcoin-filter-tu] | [![][bitcoin-filter-ii]][bitcoin-filter-iu] | Bloom filtering (BIP37) |
 | [bitcoin-wallet][bitcoin-wallet] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-wallet-ii]][bitcoin-wallet-iu] | Sends and receives coins
 | [bitcoin-net][bitcoin-net] | [![][bitcoin-net-ni]][bitcoin-net-nu] | [![][bitcoin-net-ti]][bitcoin-net-tu] | [![][bitcoin-net-ii]][bitcoin-net-iu] | High-level Bitcoin networking |
 | [bitcoin-protocol][bitcoin-protocol] | [![][bitcoin-protocol-ni]][bitcoin-protocol-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-protocol-ii]][bitcoin-protocol-iu] | Bitcoin network protocol streams |
@@ -83,6 +84,14 @@ Webcoin is made up of many small modules, most of which can each be used indepen
 [bitcoin-merkle-proof-tu]: https://travis-ci.org/mappum/bitcoin-merkle-proof
 [bitcoin-merkle-proof-ii]: https://img.shields.io/github/issues-raw/mappum/bitcoin-merkle-proof.svg
 [bitcoin-merkle-proof-iu]: https://github.com/mappum/bitcoin-merkle-proof/issues
+
+[bitcoin-filter]: https://github.com/mappum/bitcoin-filter
+[bitcoin-filter-ni]: https://img.shields.io/npm/v/bitcoin-filter.svg
+[bitcoin-filter-nu]: https://www.npmjs.com/package/bitcoin-filter
+[bitcoin-filter-ti]: https://travis-ci.org/mappum/bitcoin-filter.svg?branch=master
+[bitcoin-filter-tu]: https://travis-ci.org/mappum/bitcoin-filter
+[bitcoin-filter-ii]: https://img.shields.io/github/issues-raw/mappum/bitcoin-filter.svg
+[bitcoin-filter-iu]: https://github.com/mappum/bitcoin-filter/issues
 
 [bitcoin-wallet]: https://github.com/mappum/bitcoin-wallet
 [bitcoin-wallet-ni]: https://img.shields.io/npm/v/bitcoin-wallet.svg
