@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "^1.4.2",
-    "bitcoin": "^2.3.2",
+    "bitcoin": "^3.0.1",
     "bitcore-lib": "^0.13.11",
     "bitcore-p2p": "^1.1.0",
     "bitcore-p2p-browserify": "^1.1.0",
@@ -39,8 +39,8 @@
     "setimmediate": "^1.0.2"
   },
   "devDependencies": {
-    "semantic-release": "^3.4.1",
-    "standard": "^5.2.1",
+    "semantic-release": "^4.3.5",
+    "standard": "^7.1.0",
     "tape": "^4.2.0"
   },
   "browser": {
@@ -48,7 +48,7 @@
     "bitcore-p2p": "bitcore-p2p-browserify"
   },
   "optionalDependencies": {
-    "wrtc": "0.0.58"
+    "wrtc": "0.0.59"
   },
   "repository": {
     "type": "git",
