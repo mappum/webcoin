@@ -5,6 +5,7 @@ var Node = require('../lib/node.js')
 
 var node = new Node({
   network: Networks.livenet,
+  wrtc: require('wrtc'),
   path: 'data',
   acceptWeb: true
 })

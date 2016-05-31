@@ -14,6 +14,7 @@ var argv = require('minimist')(process.argv.slice(2))
 
 var bridge = new Bridge({
   network: argv.testnet ? Networks.testnet : Networks.livenet,
+  wrtc: require('wrtc'),
   localPeer: argv.local
 })
 
