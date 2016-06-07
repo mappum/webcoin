@@ -34,12 +34,13 @@ Webcoin is made up of many small modules, most of which can each be used indepen
 | **[webcoin][webcoin]** | [![][webcoin-ni]][webcoin-nu] | [![][webcoin-ti]][webcoin-tu] | [![][webcoin-ii]][webcoin-iu] | **SPV Bitcoin client for Node and the browser (this module)** |
 | [peer-exchange][peer-exchange] | [![][peer-exchange-ni]][peer-exchange-nu] | [![][peer-exchange-ti]][peer-exchange-tu] | [![][peer-exchange-ii]][peer-exchange-iu] | Decentralized p2p signalling and discovery |
 | [blockchain-spv][blockchain-spv] | [![][blockchain-spv-ni]][blockchain-spv-nu] | [![][blockchain-spv-ti]][blockchain-spv-tu] | [![][blockchain-spv-ii]][blockchain-spv-iu] | Stores blockchain headers and verifies with SPV |
+| [blockchain-download][blockchain-download] | [![][blockchain-download-ni]][blockchain-download-nu] | [![][blockchain-download-ti]][blockchain-download-tu] | [![][blockchain-download-ii]][blockchain-download-iu] | Download blockchain data from peers |
+| [bitcoin-wallet][bitcoin-wallet] | [![][bitcoin-wallet-ni]][bitcoin-wallet-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-wallet-ii]][bitcoin-wallet-iu] | Sends and receives coins
+| [bitcoin-protocol][bitcoin-protocol] | [![][bitcoin-protocol-ni]][bitcoin-protocol-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-protocol-ii]][bitcoin-protocol-iu] | Bitcoin network protocol streams |
+| [bitcoin-inventory][bitcoin-inventory] | [![][bitcoin-inventory-ni]][bitcoin-inventory-nu] | [![][bitcoin-inventory-ti]][bitcoin-inventory-tu] | [![][bitcoin-inventory-ii]][bitcoin-inventory-iu] | Exchange transactions with peers |
 | [bitcoin-util][bitcoin-util] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-util-ti]][bitcoin-util-tu] | [![][bitcoin-util-ii]][bitcoin-util-iu] | Utility functions for Bitcoin hashes and targets |
 | [bitcoin-merkle-proof][bitcoin-merkle-proof] | [![][bitcoin-merkle-proof-ni]][bitcoin-merkle-proof-nu] | [![][bitcoin-merkle-proof-ti]][bitcoin-merkle-proof-tu] | [![][bitcoin-merkle-proof-ii]][bitcoin-merkle-proof-iu] | Verify bitcoin Merkle proofs |
 | [bitcoin-filter][bitcoin-filter] | [![][bitcoin-filter-ni]][bitcoin-filter-nu] | [![][bitcoin-filter-ti]][bitcoin-filter-tu] | [![][bitcoin-filter-ii]][bitcoin-filter-iu] | Bloom filtering (BIP37) |
-| [bitcoin-wallet][bitcoin-wallet] | [![][bitcoin-util-ni]][bitcoin-util-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-wallet-ii]][bitcoin-wallet-iu] | Sends and receives coins
-| [bitcoin-net][bitcoin-net] | [![][bitcoin-net-ni]][bitcoin-net-nu] | [![][bitcoin-net-ti]][bitcoin-net-tu] | [![][bitcoin-net-ii]][bitcoin-net-iu] | High-level Bitcoin networking |
-| [bitcoin-protocol][bitcoin-protocol] | [![][bitcoin-protocol-ni]][bitcoin-protocol-nu] | [![][bitcoin-protocol-ti]][bitcoin-protocol-tu] | [![][bitcoin-protocol-ii]][bitcoin-protocol-iu] | Bitcoin network protocol streams |
 | [webcoin-bridge][webcoin-bridge] | [![][webcoin-bridge-ni]][webcoin-bridge-nu] | [![][webcoin-bridge-ti]][webcoin-bridge-tu] | [![][webcoin-bridge-ii]][webcoin-bridge-iu] | A proxy that bridges the Bitcoin TCP and WebRTC networks |
 | [webcoin-params][webcoin-params] | [![][webcoin-params-ni]][webcoin-params-nu] | [![][webcoin-params-ti]][webcoin-params-tu] | [![][webcoin-params-ii]][webcoin-params-iu] | Abstract parameters, used for supporting other cryptocurrencies |
 | [webcoin-param-tests][webcoin-param-tests] | [![][webcoin-param-tests-ni]][webcoin-param-tests-nu] | [![][webcoin-param-tests-ti]][webcoin-param-tests-tu] | [![][webcoin-param-tests-ii]][webcoin-param-tests-iu] | Tests for parameters |
@@ -68,6 +69,22 @@ Webcoin is made up of many small modules, most of which can each be used indepen
 [blockchain-spv-tu]: https://travis-ci.org/mappum/blockchain-spv
 [blockchain-spv-ii]: https://img.shields.io/github/issues-raw/mappum/blockchain-spv.svg
 [blockchain-spv-iu]: https://github.com/mappum/blockchain-spv/issues
+
+[blockchain-download]: https://github.com/mappum/blockchain-download
+[blockchain-download-ni]: https://img.shields.io/npm/v/blockchain-download.svg
+[blockchain-download-nu]: https://www.npmjs.com/package/blockchain-download
+[blockchain-download-ti]:https://travis-ci.org/mappum/blockchain-download.svg?branch=master
+[blockchain-download-tu]: https://travis-ci.org/mappum/blockchain-download
+[blockchain-download-ii]: https://img.shields.io/github/issues-raw/mappum/blockchain-download.svg
+[blockchain-download-iu]: https://github.com/mappum/blockchain-download/issues
+
+[bitcoin-inventory]: https://github.com/mappum/bitcoin-inventory
+[bitcoin-inventory-ni]: https://img.shields.io/npm/v/bitcoin-inventory.svg
+[bitcoin-inventory-nu]: https://www.npmjs.com/package/bitcoin-inventory
+[bitcoin-inventory-ti]: https://travis-ci.org/mappum/bitcoin-inventory.svg?branch=master
+[bitcoin-inventory-tu]: https://travis-ci.org/mappum/bitcoin-inventory
+[bitcoin-inventory-ii]: https://img.shields.io/github/issues-raw/mappum/bitcoin-inventory.svg
+[bitcoin-inventory-iu]: https://github.com/mappum/bitcoin-inventory/issues
 
 [bitcoin-util]: https://github.com/mappum/bitcoin-util
 [bitcoin-util-ni]: https://img.shields.io/npm/v/bitcoin-util.svg
