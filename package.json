@@ -1,57 +1,39 @@
 {
   "name": "webcoin",
-  "version": "0.0.0-semantically-released",
+  "version": "2.0.0",
   "description": "Bitcoin client for Node.js and the browser",
   "main": "index.js",
-  "scripts": {
-    "test": "npm run standard && ./node_modules/.bin/tape test/*.js",
-    "standard": "./node_modules/.bin/standard lib/*.js test/*.js bin/*.js index.js ",
-    "prepublish": "semantic-release pre",
-    "postpublish": "semantic-release post"
-  },
-  "bin": {
-    "webcoin-bridge": "./bin/bridge.js"
-  },
-  "keywords": [
-    "bitcoin",
-    "client",
-    "spv",
-    "cryptocurrency",
-    "p2p"
-  ],
-  "author": "Matt Bell <mappum@gmail.com>",
-  "license": "MIT",
   "dependencies": {
-    "async": "^1.4.2",
-    "bitcoin": "^2.3.2",
-    "bitcore-lib": "^0.13.11",
-    "bitcore-p2p": "^1.1.0",
-    "bitcore-p2p-browserify": "^1.1.0",
-    "browserify-buffertools": "^1.0.2",
-    "buffertools": "^2.1.3",
-    "debug": "^2.2.0",
-    "level-js": "^2.2.1",
-    "leveldown": "^1.4.1",
-    "levelup": "^1.2.1",
-    "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1",
-    "peerhub": "^0.1.1",
-    "setimmediate": "^1.0.2"
+    "bitcoin-filter": "^0.1.4",
+    "bitcoin-inventory": "^1.0.2",
+    "bitcoin-net": "^4.3.2",
+    "blockchain-download": "^1.0.0",
+    "blockchain-spv": "^2.0.5",
+    "webcoin-bitcoin": "^3.1.1",
+    "webcoin-bitcoin-testnet": "^1.1.1"
   },
-  "devDependencies": {
-    "semantic-release": "^3.4.1",
-    "standard": "^5.2.1",
-    "tape": "^4.2.0"
-  },
-  "browser": {
-    "buffertools": "browserify-buffertools",
-    "bitcore-p2p": "bitcore-p2p-browserify"
-  },
-  "optionalDependencies": {
-    "wrtc": "0.0.58"
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mappum/webcoin"
-  }
+    "url": "git+https://github.com/mappum/webcoin.git"
+  },
+  "keywords": [
+    "webcoin",
+    "bitcoin",
+    "spv",
+    "client",
+    "webrtc",
+    "p2p",
+    "network",
+    "coins"
+  ],
+  "author": "Matt Bell <mappum@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mappum/webcoin/issues"
+  },
+  "homepage": "https://github.com/mappum/webcoin#readme"
 }
