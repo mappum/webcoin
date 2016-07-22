@@ -22,7 +22,7 @@
   "author": "Matt Bell <mappum@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "async": "^1.4.2",
+    "async": "^2.0.1",
     "bitcoin": "^2.3.2",
     "bitcore-lib": "^0.13.11",
     "bitcore-p2p": "^1.1.0",
