@@ -24,7 +24,7 @@
   "dependencies": {
     "async": "^1.4.2",
     "bitcoin": "^2.3.2",
-    "bitcore-lib": "^0.13.11",
+    "bitcore-lib": "^0.13.19",
     "bitcore-p2p": "^1.1.0",
     "bitcore-p2p-browserify": "^1.1.0",
     "browserify-buffertools": "^1.0.2",
