@@ -48,7 +48,7 @@
     "bitcore-p2p": "bitcore-p2p-browserify"
   },
   "optionalDependencies": {
-    "wrtc": "0.0.58"
+    "wrtc": "0.0.61"
   },
   "repository": {
     "type": "git",
