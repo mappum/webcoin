@@ -9,6 +9,9 @@
     "bitcoin-net": "^4.3.2",
     "blockchain-download": "^1.0.0",
     "blockchain-spv": "^2.0.5",
+    "object-assign": "^4.1.0",
+    "pump": "^1.0.1",
+    "sublevelup": "^4.0.0",
     "webcoin-bitcoin": "^3.1.1",
     "webcoin-bitcoin-testnet": "^1.1.1"
   },
