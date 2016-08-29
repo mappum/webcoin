@@ -7,6 +7,7 @@ const Blockchain = require('blockchain-spv')
 const { PeerGroup } = require('bitcoin-net')
 const { HeaderStream } = require('blockchain-download')
 const Filter = require('bitcoin-filter')
+const Inventory = require('bitcoin-inventory')
 const pump = require('pump')
 const assign = require('object-assign')
 
@@ -30,6 +31,7 @@ class Node extends EventEmitter {
     this.peers.on('error', this._error.bind(this))
 
     this.filter = Filter(this.peers, opts.filterOpts)
+    this.inventory = Inventory(this.peers)
   }
 
   start () {
