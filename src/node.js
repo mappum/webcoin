@@ -38,9 +38,9 @@ class Node extends EventEmitter {
       // download headers from peers and pipe into chain
       this.headers = HeaderStream(this.peers)
       this.headers.once('tip', () => {
-        this.chain.once('headers', () => {
-          this.emit('tip', this.chain.getTip())
-        })
+        var emit = () => this.emit('synced', this.chain.getTip())
+        if (!this.headers.lastHash) return emit()
+        this.chain.once('headers', emit)
       })
       pump(
         this.chain.createLocatorStream(),
