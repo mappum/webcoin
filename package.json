@@ -1,6 +1,6 @@
 {
   "name": "webcoin",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Bitcoin client for Node.js and the browser",
   "main": "index.js",
   "dependencies": {
