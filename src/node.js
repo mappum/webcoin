@@ -25,9 +25,10 @@ class Node extends EventEmitter {
     this.chain.on('error', this._error.bind(this))
 
     var peerGroupOpts = assign({
-      getTip: () => this.chain.getTip
+      getTip: () => this.chain.getTip()
     }, opts.peerGroupOpts)
-    this.peers = PeerGroup(params.net, peerGroupOpts)
+    var wrtc = opts.wrtc
+    this.peers = PeerGroup(params.net, assign({ wrtc }, peerGroupOpts))
     this.peers.on('error', this._error.bind(this))
 
     this.filter = Filter(this.peers, opts.filterOpts)
