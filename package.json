@@ -19,7 +19,7 @@
     "babel-preset-es2015": "^6.14.0",
     "faucet": "0.0.1",
     "levelup": "^1.3.2",
-    "memdown": "^1.2.0",
+    "memdown": "^1.2.3",
     "nyc": "^8.1.0",
     "standard": "^8.0.0",
     "tape": "^4.6.0",
