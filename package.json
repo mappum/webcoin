@@ -5,14 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "bitcoin-filter": "^0.2.0",
-    "bitcoin-inventory": "^1.0.2",
-    "bitcoin-net": "^4.4.0",
-    "blockchain-download": "^1.1.1",
-    "blockchain-spv": "^2.1.0",
-    "object-assign": "^4.1.0",
-    "old": "^0.1.3",
-    "pump": "^1.0.1",
-    "sublevelup": "^4.0.0"
+    "bitcoin-inventory": "^1.2.2",
+    "bitcoin-net": "^5.2.0",
+    "blockchain-download": "^2.1.2",
+    "blockchain-spv": "^3.3.0",
+    "old": "^0.1.3"
   },
   "devDependencies": {
     "faucet": "0.0.1",
