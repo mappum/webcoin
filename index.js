@@ -1,1 +1,1 @@
-module.exports = require('./lib/node.js')
+module.exports = require('./src/node.js')

@@ -15,11 +15,7 @@
     "sublevelup": "^4.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-preset-es2015": "^6.14.0",
     "faucet": "0.0.1",
-    "levelup": "^1.3.2",
-    "memdown": "^1.2.0",
     "nyc": "^8.1.0",
     "standard": "^8.0.0",
     "tape": "^4.6.0",
@@ -27,11 +23,7 @@
   },
   "scripts": {
     "test": "standard index.js src/*.js && nyc tape test/*.js | faucet && nyc report",
-    "test-browser": "npm run build && ./test/browser.sh && npm run source",
-    "build": "rm -rf lib && babel --presets es2015 src -d lib",
-    "source": "rm -rf lib && ln -s src lib",
-    "prepublish": "npm run build",
-    "publish": "npm run source"
+    "test-browser": "./test/browser.sh"
   },
   "repository": {
     "type": "git",
