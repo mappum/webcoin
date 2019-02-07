@@ -77,6 +77,12 @@ class Node extends EventEmitter {
     if (this._filter == null) {
       this._filter = Filter(this.peers, this.opts.filterOpts)
     }
+
+    // strings are addresses, convert to script item
+    if (typeof item === 'string') {
+      item = addressToItem(item)
+    }
+
     this.filterItems.push(item)
     this._filter.add(item)
   }
@@ -158,6 +164,18 @@ class Node extends EventEmitter {
     this.close()
     this.emit('error', err)
   }
+}
+
+function addressToItem (address) {
+  try {
+    return bitcoin.address.fromBase58Check(address).hash
+  } catch (err) {}
+
+  try {
+    return bitcoin.address.fromBech32(address).data
+  } catch (err) {}
+
+  throw Error('Unknown address type')
 }
 
 module.exports = old(Node)
