@@ -10,6 +10,9 @@ const Inventory = require('bitcoin-inventory')
 const bitcoin = require('bitcoinjs-lib')
 const merkle = require('bitcoin-merkle-proof')
 
+// TODO: get this from somewhere else
+const { getTxHash } = require('bitcoin-net/src/utils.js')
+
 const params = {
   bitcoin: require('webcoin-bitcoin'),
   testnet: require('webcoin-bitcoin-testnet')
@@ -31,10 +34,8 @@ class Node extends EventEmitter {
     }
 
     this.error = this.error.bind(this)
-    let scan = this.scan.bind(this)
-    this.scan = (...args) => {
-      return scan(...args).catch(this.error)
-    }
+    this.scan = this.handleErrors(this.scan)
+    this.getUtxos = this.handleErrors(this.getUtxos)
 
     // TODO: chain state persistence
     this.chain = Blockchain({
@@ -58,6 +59,9 @@ class Node extends EventEmitter {
 
     this.atTip = false
     this.once('tip', () => this.atTip = true)
+
+    this.scanning = false
+    this.scanTxs = []
   }
 
   start () {
@@ -89,68 +93,136 @@ class Node extends EventEmitter {
 
   // TODO: support timestamp ranges
   async scan (range, onTransaction) {
-    if (this._filter == null) {
-      throw Error('Cannot call scan until filter items are set')
+    if (this.scanning) {
+      throw Error('Already scanning')
     }
+    this.scanning = true
+    try {
+      await this.ready()
 
-    // ensure filter is ready
-    await new Promise((resolve) => {
-      this._filter.onceReady(resolve)
-    })
+      // TODO: allow ascending scan which can happen while headers are syncing
 
-    // wait for chain to be synced to tip
-    // TODO: allow ascending scan which can happen while headers are syncing
-    if (!this.atTip) {
-      await new Promise((resolve) => this.once('tip', resolve))
-    }
-
-    // TODO: break up request into batches
-    let height = this.chain.height()
-    let blockHashes = []
-    for (let i = 0; i < range; i++) {
-      let header = this.chain.getByHeight(height - i)
-      let hash = Blockchain.getHash(header)
-      blockHashes.push(hash)
-    }
-
-    let blocks = await new Promise((resolve, reject) => {
-      this.peers.getBlocks(blockHashes, { filtered: true }, (err, blocks) => {
-        if (err != null) return reject(err)
-        resolve(blocks)
-      })
-    })
-
-    // verify proofs for blocks with txs that matched the filter
-    let nonEmptyBlocks = blocks.filter((block) => !block.flags.equals(Buffer.from([ 0 ])))
-    for (let merkleBlock of nonEmptyBlocks) {
-      let hash = Blockchain.getHash(merkleBlock.header)
-      let header = this.chain.getByHash(hash)
-      if (header.height > height || (height - header.height) > range) {
-        // block out of scan range (TODO: should this error?)
-        continue
+      // TODO: break up request into batches
+      let height = this.chain.height()
+      let blockHashes = []
+      for (let i = 0; i < range; i++) {
+        let header = this.chain.getByHeight(height - i)
+        let hash = Blockchain.getHash(header)
+        blockHashes.push(hash)
       }
-      let matchedHashes = merkle.verify({
-        merkleRoot: header.merkleRoot,
-        hashes: merkleBlock.hashes,
-        flags: merkleBlock.flags,
-        numTransactions: merkleBlock.numTransactions
+
+      let blocks = await new Promise((resolve, reject) => {
+        this.peers.getBlocks(blockHashes, { filtered: true }, (err, blocks) => {
+          if (err != null) return reject(err)
+          resolve(blocks)
+        })
       })
 
-      // get or wait for txs included in the proof
-      // we use reverse tx order since the scan is already in reverse block order
-      for (let hash of matchedHashes.reverse()) {
-        let tx = this.inventory.get(hash)
-        if (tx == null) {
-          tx = await new Promise((resolve) => {
-            this.peers.once(`tx:${hash.toString('base64')}`, resolve)
-          })
+      let txSet = new Set()
+
+      // verify proofs for blocks with txs that matched the filter
+      let nonEmptyBlocks = blocks.filter((block) => !block.flags.equals(Buffer.from([ 0 ])))
+      for (let merkleBlock of nonEmptyBlocks) {
+        let hash = Blockchain.getHash(merkleBlock.header)
+        let header = this.chain.getByHash(hash)
+        if (header.height > height || (height - header.height) > range) {
+          // block out of scan range (TODO: should this error?)
+          continue
         }
-        onTransaction(tx)
+        let matchedHashes = merkle.verify({
+          merkleRoot: header.merkleRoot,
+          hashes: merkleBlock.hashes,
+          flags: merkleBlock.flags,
+          numTransactions: merkleBlock.numTransactions
+        })
+
+        // get or wait for txs included in the proof
+        // we use reverse tx order since the scan is already in reverse block order
+        for (let hash of matchedHashes.reverse()) {
+          let tx = this.inventory.get(hash)
+          let existed = !!tx
+          if (tx == null) {
+            tx = await new Promise((resolve) => {
+              this.peers.once(`tx:${hash.toString('base64')}`, resolve)
+            })
+          }
+          txSet.add(tx)
+          onTransaction(tx)
+        }
       }
+
+      // re-emit unconfirmed txs
+      for (let tx of this.scanTxs) {
+        if (!txSet.has(tx)) {
+          this.onTransaction(tx)
+        }
+      }
+      this.scanTxs = []
+    } finally {
+      this.scanning = false
     }
   }
 
+  async getUtxos (opts = {}) {
+    await this.ready()
+
+    return new Promise((resolve, reject) => {
+      let scanRange = opts.scanRange || 50
+      let limit = opts.limit || 1
+
+      let spent = new Set()
+      let utxos = []
+
+      let done = (err) => {
+        this.removeListener('unconfirmed-tx', onTx)
+        if (err != null) {
+          reject(err)
+        } else {
+          resolve(utxos)
+        }
+      }
+
+      let onTx = (tx) => {
+        let txid = getTxHash(tx)
+        let txidBase64 = txid.toString('base64')
+
+        for (let input of tx.ins) {
+          if (!this.matchesFilter(input.script)) continue
+          spent.add(`${input.hash.toString('base64')}:${input.index}`)
+        }
+
+        let vout = 0
+        for (let output of tx.outs) {
+          if (!this.matchesFilter(output.script)) continue
+          if (spent.has(`${txidBase64}:${vout}`)) continue
+          utxos.push({ txid, vout, ...output })
+          if (utxos.length >= limit) done()
+          vout += 1
+        }
+      }
+
+      this.on('unconfirmed-tx', onTx)
+
+      // XXX: wait for peers to send mempool txs before scanning
+      this.peers.send('mempool')
+      setTimeout(() => {
+        if (utxos.length >= limit) return
+        node.scan(scanRange, onTx)
+          .catch(done)
+      }, 5000)
+    })
+  }
+
   onTransaction (tx) {
+    // while scanning, put all received txs into a queue
+    // so we can figure out which ones are unconfirmed and
+    // which ones are from the scan results. unconfirmed txs
+    // will be re-emitted after the scan is done
+    if (this.scanning) {
+      this.scanTxs.push(tx)
+      return
+    }
+
     // TODO: filter out false positives
     this.emit('unconfirmed-tx', tx)
   }
@@ -163,6 +235,36 @@ class Node extends EventEmitter {
     if (err == null) return
     this.close()
     this.emit('error', err)
+  }
+
+  handleErrors (func) {
+    func = func.bind(this)
+    return (...args) => {
+      return func(...args).catch(this.error)
+    }
+  }
+
+  async ready () {
+    if (this._filter == null) {
+      throw Error('No filter items set')
+    }
+
+    // ensure filter is ready
+    await new Promise((resolve) => {
+      this._filter.onceReady(resolve)
+    })
+
+    // wait for chain to be synced to tip
+    if (!this.atTip) {
+      await new Promise((resolve) => this.once('tip', resolve))
+    }
+  }
+
+  matchesFilter (script) {
+    for (let item of this.filterItems) {
+      if (script.includes(item)) return true
+    }
+    return false
   }
 }
 
