@@ -66,7 +66,7 @@ class Node extends EventEmitter {
 
   start () {
     // connect to peers
-    this.peers.connect(async () => {
+    this.peers.connect(() => {
       // download headers, verify, and add to chain
       download(this.chain, this.peers)
         .then(() => {
@@ -191,13 +191,13 @@ class Node extends EventEmitter {
           spent.add(`${input.hash.toString('base64')}:${input.index}`)
         }
 
-        let vout = 0
+        let vout = -1
         for (let output of tx.outs) {
+          vout += 1
           if (!this.matchesFilter(output.script)) continue
           if (spent.has(`${txidBase64}:${vout}`)) continue
-          utxos.push({ txid, vout, ...output })
+          utxos.push({ tx, txid, vout, ...output })
           if (utxos.length >= limit) done()
-          vout += 1
         }
       }
 
@@ -207,7 +207,7 @@ class Node extends EventEmitter {
       this.peers.send('mempool')
       setTimeout(() => {
         if (utxos.length >= limit) return
-        node.scan(scanRange, onTx)
+        this.scan(scanRange, onTx)
           .catch(done)
       }, 5000)
     })
