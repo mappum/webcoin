@@ -147,7 +147,7 @@ class Node extends EventEmitter {
             })
           }
           txSet.add(tx)
-          onTransaction(tx)
+          onTransaction(tx, header)
         }
       }
 
@@ -182,7 +182,7 @@ class Node extends EventEmitter {
         }
       }
 
-      let onTx = (tx) => {
+      let onTx = (tx, header) => {
         let txid = getTxHash(tx)
         let txidBase64 = txid.toString('base64')
 
@@ -196,7 +196,13 @@ class Node extends EventEmitter {
           vout += 1
           if (!this.matchesFilter(output.script)) continue
           if (spent.has(`${txidBase64}:${vout}`)) continue
-          utxos.push({ tx, txid, vout, ...output })
+          utxos.push({
+            tx,
+            header,
+            txid,
+            vout,
+            ...output
+          })
           if (utxos.length >= limit) done()
         }
       }
@@ -204,6 +210,8 @@ class Node extends EventEmitter {
       this.on('unconfirmed-tx', onTx)
 
       // XXX: wait for peers to send mempool txs before scanning
+      // TODO: make this better by making bitcoin-inventory treat txs differently if they
+      //       are sent unsolicited (e.g. the txs following 'merkleblock' messages)
       this.peers.send('mempool')
       setTimeout(() => {
         if (utxos.length >= limit) return
