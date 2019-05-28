@@ -28,7 +28,7 @@ class Node extends EventEmitter {
 
     // TODO: support regtest
     this.bitcoinJsNetwork = bitcoin.networks[network]
-    this.params = params[network]
+    this.params = opts.params || params[network]
     if (!this.bitcoinJsNetwork || !this.params) {
       throw Error(`Unknown network "${network}"`)
     }
